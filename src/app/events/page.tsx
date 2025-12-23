@@ -1,15 +1,21 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui';
 import { EventList, MonthFilter } from '@/components/events';
-import { getEvents, getAllEvents } from '@/lib/actions/events';
+import { getEvents, getEventsByYear } from '@/lib/actions/events';
+import { format } from 'date-fns';
 
 interface EventsPageProps {
-  searchParams: Promise<{ month?: string }>;
+  searchParams: Promise<{ month?: string; year?: string }>;
 }
 
 export default async function EventsPage({ searchParams }: EventsPageProps) {
   const params = await searchParams;
-  const events = params.month ? await getEvents(params.month) : await getAllEvents();
+  const currentYear = params.year || format(new Date(), 'yyyy');
+  const isYearView = !params.month;
+
+  const events = params.month
+    ? await getEvents(params.month)
+    : await getEventsByYear(currentYear);
 
   return (
     <div>
@@ -23,9 +29,9 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
         </Link>
       </div>
 
-      <MonthFilter currentMonth={params.month} />
+      <MonthFilter currentMonth={params.month} currentYear={currentYear} />
 
-      <EventList events={events} />
+      <EventList events={events} groupByMonth={isYearView} />
     </div>
   );
 }

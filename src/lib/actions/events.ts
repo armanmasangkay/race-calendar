@@ -138,3 +138,21 @@ export async function getEventById(id: number): Promise<EventWithCategories | nu
 
   return result || null;
 }
+
+export async function getEventsByYear(year: string): Promise<EventWithCategories[]> {
+  const startDate = `${year}-01-01`;
+  const endDate = `${year}-12-31`;
+
+  const result = await db.query.events.findMany({
+    where: and(
+      gte(events.raceDate, startDate),
+      lte(events.raceDate, endDate)
+    ),
+    with: {
+      categories: true,
+    },
+    orderBy: [asc(events.raceDate)],
+  });
+
+  return result;
+}

@@ -1,18 +1,22 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { format, addMonths, subMonths } from 'date-fns';
+import { format, addMonths, subMonths, addYears, subYears } from 'date-fns';
 import { Button } from '@/components/ui';
 
 interface MonthFilterProps {
   currentMonth?: string;
+  currentYear?: string;
   basePath?: string;
 }
 
-export function MonthFilter({ currentMonth, basePath = '/events' }: MonthFilterProps) {
+export function MonthFilter({ currentMonth, currentYear, basePath = '/events' }: MonthFilterProps) {
   const router = useRouter();
 
-  const current = currentMonth ? new Date(currentMonth + '-01') : new Date();
+  const isYearView = !currentMonth;
+  const current = currentMonth
+    ? new Date(currentMonth + '-01')
+    : new Date(currentYear ? `${currentYear}-01-01` : new Date());
 
   const handlePrevMonth = () => {
     const newMonth = subMonths(current, 1);
@@ -24,8 +28,19 @@ export function MonthFilter({ currentMonth, basePath = '/events' }: MonthFilterP
     router.push(`${basePath}?month=${format(newMonth, 'yyyy-MM')}`);
   };
 
-  const handleClear = () => {
-    router.push(basePath);
+  const handlePrevYear = () => {
+    const newYear = subYears(current, 1);
+    router.push(`${basePath}?year=${format(newYear, 'yyyy')}`);
+  };
+
+  const handleNextYear = () => {
+    const newYear = addYears(current, 1);
+    router.push(`${basePath}?year=${format(newYear, 'yyyy')}`);
+  };
+
+  const handleShowAll = () => {
+    const year = format(current, 'yyyy');
+    router.push(`${basePath}?year=${year}`);
   };
 
   return (
@@ -34,7 +49,7 @@ export function MonthFilter({ currentMonth, basePath = '/events' }: MonthFilterP
         <Button
           variant="ghost"
           size="sm"
-          onClick={handlePrevMonth}
+          onClick={isYearView ? handlePrevYear : handlePrevMonth}
           className="hover:bg-rose-50 hover:text-rose-500 rounded-xl"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,12 +58,12 @@ export function MonthFilter({ currentMonth, basePath = '/events' }: MonthFilterP
         </Button>
         <span className="text-sm font-bold min-w-[140px] text-center text-stone-700 flex items-center justify-center gap-2">
           <span>📆</span>
-          {format(current, 'MMMM yyyy')}
+          {isYearView ? format(current, 'yyyy') : format(current, 'MMMM yyyy')}
         </span>
         <Button
           variant="ghost"
           size="sm"
-          onClick={handleNextMonth}
+          onClick={isYearView ? handleNextYear : handleNextMonth}
           className="hover:bg-rose-50 hover:text-rose-500 rounded-xl"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,7 +72,7 @@ export function MonthFilter({ currentMonth, basePath = '/events' }: MonthFilterP
         </Button>
       </div>
       {currentMonth && (
-        <Button variant="outline" size="sm" onClick={handleClear}>
+        <Button variant="outline" size="sm" onClick={handleShowAll}>
           🎯 Show All
         </Button>
       )}
