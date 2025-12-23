@@ -33,7 +33,7 @@ export default function RootLayout({
             <nav className="flex items-center justify-between">
               <Link href="/" className="text-xl font-bold bg-gradient-to-r from-rose-500 to-teal-500 bg-clip-text text-transparent flex items-center gap-2">
                 <span className="text-2xl">🏃</span>
-                Race Calendar
+                <span className="hidden sm:inline">Race Calendar</span>
               </Link>
               <div className="flex items-center gap-4">
                 <Link
