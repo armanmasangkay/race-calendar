@@ -83,7 +83,7 @@ export function EventForm({ event, mode }: EventFormProps) {
         name="name"
         defaultValue={event?.name}
         required
-        placeholder="e.g., Manila Marathon 2025"
+        placeholder="e.g., Malitbog Fun Run 2025"
       />
 
       <Input
@@ -99,7 +99,7 @@ export function EventForm({ event, mode }: EventFormProps) {
         name="location"
         defaultValue={event?.location}
         required
-        placeholder="e.g., MOA Concert Grounds, Pasay City"
+        placeholder="e.g., Malitbog Town Plaza, Southern Leyte"
       />
 
       <Input
