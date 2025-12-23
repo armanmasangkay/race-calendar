@@ -47,7 +47,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <span>📆</span>
             Events in {format(new Date(currentMonth + '-01'), 'MMMM yyyy')}
           </h2>
-          <EventList events={events} compact />
+          <EventList events={events} />
         </div>
       </div>
     </div>
