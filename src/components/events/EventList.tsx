@@ -1,5 +1,7 @@
 import { EventWithCategories } from '@/lib/db/schema';
 import { EventCard } from './EventCard';
+import { Button } from '@/components/ui';
+import Link from 'next/link';
 
 interface EventListProps {
   events: EventWithCategories[];
@@ -9,19 +11,29 @@ interface EventListProps {
 export function EventList({ events, compact = false }: EventListProps) {
   if (events.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
-        <svg className="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <p>No events found</p>
+      <div className="text-center py-12 px-6 bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50 rounded-2xl border border-rose-100">
+        <div className="text-6xl mb-4 animate-bounce-subtle">🏃</div>
+        <p className="text-stone-600 text-lg font-medium">No races scheduled yet!</p>
+        <p className="text-stone-400 mt-2">Time to find your next adventure! 🎉</p>
+        <Link href="/events/new" className="inline-block mt-6">
+          <Button>
+            ✨ Add Your First Race
+          </Button>
+        </Link>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      {events.map((event) => (
-        <EventCard key={event.id} event={event} compact={compact} />
+      {events.map((event, index) => (
+        <div
+          key={event.id}
+          className="animate-slide-up"
+          style={{ animationDelay: `${index * 0.1}s` }}
+        >
+          <EventCard event={event} compact={compact} />
+        </div>
       ))}
     </div>
   );

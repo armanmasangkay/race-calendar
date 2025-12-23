@@ -14,9 +14,12 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">All Race Events</h1>
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-rose-500 to-teal-500 bg-clip-text text-transparent flex items-center gap-3">
+          <span className="text-4xl">🎯</span>
+          All Race Events
+        </h1>
         <Link href="/events/new">
-          <Button>+ Add Event</Button>
+          <Button>✨ Add Event</Button>
         </Link>
       </div>
 

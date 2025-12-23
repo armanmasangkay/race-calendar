@@ -26,32 +26,33 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-orange-50 min-h-screen`}
       >
-        <header className="bg-white shadow-sm border-b border-gray-200">
+        <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-rose-100 sticky top-0 z-50">
           <div className="max-w-6xl mx-auto px-4 py-4">
             <nav className="flex items-center justify-between">
-              <Link href="/" className="text-xl font-bold text-blue-600">
+              <Link href="/" className="text-xl font-bold bg-gradient-to-r from-rose-500 to-teal-500 bg-clip-text text-transparent flex items-center gap-2">
+                <span className="text-2xl">🏃</span>
                 Race Calendar
               </Link>
               <div className="flex items-center gap-4">
                 <Link
                   href="/"
-                  className="text-gray-600 hover:text-gray-900 text-sm font-medium"
+                  className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200"
                 >
-                  Calendar
+                  📅 Calendar
                 </Link>
                 <Link
                   href="/events"
-                  className="text-gray-600 hover:text-gray-900 text-sm font-medium"
+                  className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200"
                 >
-                  All Events
+                  🎯 All Events
                 </Link>
                 <Link
                   href="/events/new"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700"
+                  className="bg-gradient-to-r from-rose-500 to-rose-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:from-rose-600 hover:to-rose-500 transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
                 >
-                  + Add Event
+                  ✨ Add Event
                 </Link>
               </div>
             </nav>
@@ -60,9 +61,14 @@ export default function RootLayout({
         <main className="max-w-6xl mx-auto px-4 py-8">
           {children}
         </main>
-        <footer className="border-t border-gray-200 mt-auto">
-          <div className="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
-            Race Calendar - Track your running events
+        <footer className="border-t border-rose-100 mt-auto bg-gradient-to-r from-orange-50 via-rose-50 to-teal-50">
+          <div className="max-w-6xl mx-auto px-4 py-8 text-center">
+            <p className="text-stone-600 text-sm">
+              Made with ❤️ for runners everywhere
+            </p>
+            <p className="text-stone-400 text-xs mt-2">
+              🏅 Race Calendar - Track your running adventures! 🎉
+            </p>
           </div>
         </footer>
       </body>

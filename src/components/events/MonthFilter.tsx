@@ -29,17 +29,28 @@ export function MonthFilter({ currentMonth, basePath = '/events' }: MonthFilterP
   };
 
   return (
-    <div className="flex items-center gap-4 mb-6">
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" onClick={handlePrevMonth}>
+    <div className="flex items-center gap-4 mb-6 bg-white rounded-2xl p-4 border border-rose-100 shadow-sm">
+      <div className="flex items-center gap-3">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handlePrevMonth}
+          className="hover:bg-rose-50 hover:text-rose-500 rounded-xl"
+        >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </Button>
-        <span className="text-sm font-medium min-w-[120px] text-center">
+        <span className="text-sm font-bold min-w-[140px] text-center text-stone-700 flex items-center justify-center gap-2">
+          <span>📆</span>
           {format(current, 'MMMM yyyy')}
         </span>
-        <Button variant="ghost" size="sm" onClick={handleNextMonth}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleNextMonth}
+          className="hover:bg-rose-50 hover:text-rose-500 rounded-xl"
+        >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
@@ -47,7 +58,7 @@ export function MonthFilter({ currentMonth, basePath = '/events' }: MonthFilterP
       </div>
       {currentMonth && (
         <Button variant="outline" size="sm" onClick={handleClear}>
-          Show All
+          🎯 Show All
         </Button>
       )}
     </div>

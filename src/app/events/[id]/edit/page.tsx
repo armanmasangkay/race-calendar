@@ -19,16 +19,17 @@ export default async function EditEventPage({ params }: EditEventPageProps) {
     <div className="max-w-2xl mx-auto">
       <Link
         href={`/events/${event.id}`}
-        className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 mb-6"
+        className="inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 mb-6 font-medium transition-colors group"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
+        <span className="group-hover:-translate-x-1 transition-transform">←</span>
         Back to Event
       </Link>
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Edit Race Event</h1>
-      <div className="bg-white rounded-lg shadow p-6">
+      <h1 className="text-3xl font-bold bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent mb-8 flex items-center gap-3">
+        <span className="text-4xl">✏️</span>
+        Edit Race Event
+      </h1>
+      <div className="bg-white rounded-2xl shadow-lg border border-rose-100 p-8">
         <EventForm event={event} mode="edit" />
       </div>
     </div>

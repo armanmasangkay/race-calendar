@@ -27,15 +27,15 @@ export function DeleteButton({ eventId }: DeleteButtonProps) {
 
   if (showConfirm) {
     return (
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-600">Delete this event?</span>
+      <div className="flex items-center gap-3 bg-rose-50 px-4 py-3 rounded-xl border border-rose-200">
+        <span className="text-sm text-stone-600 font-medium">⚠️ Delete this event?</span>
         <Button
           variant="danger"
           size="sm"
           onClick={handleDelete}
           disabled={isDeleting}
         >
-          {isDeleting ? 'Deleting...' : 'Yes, Delete'}
+          {isDeleting ? '⏳ Deleting...' : '🗑️ Yes, Delete'}
         </Button>
         <Button
           variant="outline"
@@ -51,7 +51,7 @@ export function DeleteButton({ eventId }: DeleteButtonProps) {
 
   return (
     <Button variant="danger" onClick={() => setShowConfirm(true)}>
-      Delete Event
+      🗑️ Delete Event
     </Button>
   );
 }

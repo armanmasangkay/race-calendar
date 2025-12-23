@@ -12,20 +12,23 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center rounded-md font-medium transition-colors cursor-pointer',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500',
-          'disabled:pointer-events-none disabled:opacity-50',
+          'inline-flex items-center justify-center font-semibold cursor-pointer',
+          'rounded-xl transition-all duration-300 ease-out',
+          'transform hover:scale-105 hover:-translate-y-0.5',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-rose-400',
+          'disabled:pointer-events-none disabled:opacity-50 disabled:transform-none',
+          'shadow-sm hover:shadow-md',
           {
-            'bg-blue-600 text-white hover:bg-blue-700': variant === 'primary',
-            'bg-gray-200 text-gray-900 hover:bg-gray-300': variant === 'secondary',
-            'border border-gray-300 bg-transparent hover:bg-gray-100': variant === 'outline',
-            'bg-transparent hover:bg-gray-100': variant === 'ghost',
-            'bg-red-600 text-white hover:bg-red-700': variant === 'danger',
+            'bg-gradient-to-r from-rose-500 to-rose-400 text-white hover:from-rose-600 hover:to-rose-500': variant === 'primary',
+            'bg-teal-100 text-teal-700 hover:bg-teal-200': variant === 'secondary',
+            'border-2 border-rose-300 bg-transparent text-rose-600 hover:bg-rose-50 hover:border-rose-400': variant === 'outline',
+            'bg-transparent text-stone-600 hover:bg-rose-50 hover:text-rose-600 shadow-none': variant === 'ghost',
+            'bg-gradient-to-r from-red-500 to-red-400 text-white hover:from-red-600 hover:to-red-500': variant === 'danger',
           },
           {
-            'h-8 px-3 text-sm': size === 'sm',
-            'h-10 px-4': size === 'md',
-            'h-12 px-6 text-lg': size === 'lg',
+            'h-9 px-4 text-sm': size === 'sm',
+            'h-11 px-5': size === 'md',
+            'h-13 px-7 text-lg': size === 'lg',
           },
           className
         )}

@@ -18,6 +18,7 @@ import { CalendarHeader } from './CalendarHeader';
 import { CalendarDay } from './CalendarDay';
 import { EventWithCategories } from '@/lib/db/schema';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { cn } from '@/lib/utils/cn';
 
 interface CalendarViewProps {
   events: EventWithCategories[];
@@ -60,24 +61,29 @@ export function CalendarView({ events }: CalendarViewProps) {
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className="bg-white rounded-2xl shadow-lg border border-rose-100 p-5 transition-all duration-300">
       <CalendarHeader
         currentMonth={currentMonth}
         onPrevMonth={handlePrevMonth}
         onNextMonth={handleNextMonth}
       />
-      <div className="mt-4">
-        <div className="grid grid-cols-7 mb-2">
-          {weekDays.map((day) => (
+      <div className="mt-5">
+        <div className="grid grid-cols-7 mb-3">
+          {weekDays.map((day, index) => (
             <div
               key={day}
-              className="text-center text-sm font-medium text-gray-500 py-2"
+              className={cn(
+                "text-center text-sm font-bold py-2 rounded-lg",
+                index === 0 || index === 6
+                  ? "text-rose-400 bg-rose-50"
+                  : "text-stone-500"
+              )}
             >
               {day}
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-7">
+        <div className="grid grid-cols-7 gap-1">
           {days.map((day) => (
             <CalendarDay
               key={day.toISOString()}

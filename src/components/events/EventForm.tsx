@@ -72,13 +72,14 @@ export function EventForm({ event, mode }: EventFormProps) {
   return (
     <form action={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          {error}
+        <div className="bg-rose-50 border-2 border-rose-200 text-rose-600 px-5 py-4 rounded-xl flex items-center gap-3">
+          <span className="text-xl">⚠️</span>
+          <span className="font-medium">{error}</span>
         </div>
       )}
 
       <Input
-        label="Event Name"
+        label="🏃 Event Name"
         name="name"
         defaultValue={event?.name}
         required
@@ -86,7 +87,7 @@ export function EventForm({ event, mode }: EventFormProps) {
       />
 
       <Input
-        label="Race Date"
+        label="📅 Race Date"
         name="raceDate"
         type="date"
         defaultValue={event?.raceDate}
@@ -94,7 +95,7 @@ export function EventForm({ event, mode }: EventFormProps) {
       />
 
       <Input
-        label="Location / Venue"
+        label="📍 Location / Venue"
         name="location"
         defaultValue={event?.location}
         required
@@ -102,7 +103,7 @@ export function EventForm({ event, mode }: EventFormProps) {
       />
 
       <Input
-        label="Registration Link"
+        label="🔗 Registration Link"
         name="registrationLink"
         type="url"
         defaultValue={event?.registrationLink || ''}
@@ -110,14 +111,15 @@ export function EventForm({ event, mode }: EventFormProps) {
       />
 
       <Input
-        label="Payment Deadline"
+        label="⏰ Payment Deadline"
         name="paymentDeadline"
         type="date"
         defaultValue={event?.paymentDeadline || ''}
       />
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-bold text-stone-700 mb-3 flex items-center gap-2">
+          <span>🏅</span>
           Race Categories & Prices
         </label>
         {categories.map((category, index) => (
@@ -135,19 +137,19 @@ export function EventForm({ event, mode }: EventFormProps) {
           variant="outline"
           size="sm"
           onClick={addCategory}
-          className="mt-2"
+          className="mt-3"
         >
-          + Add Category
+          ➕ Add Category
         </Button>
       </div>
 
-      <div className="flex gap-4 pt-4">
+      <div className="flex gap-4 pt-6 border-t border-rose-100">
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting
-            ? 'Saving...'
+            ? '⏳ Saving...'
             : mode === 'create'
-            ? 'Create Event'
-            : 'Update Event'}
+            ? '✨ Create Event'
+            : '💾 Update Event'}
         </Button>
         <Button
           type="button"
