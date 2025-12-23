@@ -54,18 +54,19 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
             <span className="text-lg text-stone-700">{event.location}</span>
           </div>
 
-          {event.paymentDeadline && (
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">⏰</span>
-              <span className={cn(
-                'text-lg font-medium',
-                isDeadlinePassed ? 'text-rose-500' : 'text-stone-700'
-              )}>
-                Payment Deadline: {format(new Date(event.paymentDeadline), 'MMMM d, yyyy')}
-                {isDeadlinePassed && ' (Passed ❌)'}
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">⏰</span>
+            <span className={cn(
+              'text-lg font-medium',
+              isDeadlinePassed ? 'text-rose-500' : event.paymentDeadline ? 'text-stone-700' : 'text-stone-400 italic'
+            )}>
+              Payment Deadline:{' '}
+              {event.paymentDeadline
+                ? format(new Date(event.paymentDeadline), 'MMMM d, yyyy')
+                : 'To be announced'}
+              {isDeadlinePassed && ' (Passed ❌)'}
+            </span>
+          </div>
         </div>
 
         <div className="mt-8">

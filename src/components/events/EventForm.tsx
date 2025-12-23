@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@/components/ui';
 import { CategoryInput } from './CategoryInput';
@@ -21,6 +21,8 @@ export function EventForm({ event, mode }: EventFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [noDeadline, setNoDeadline] = useState(!event?.paymentDeadline);
+  const deadlineInputRef = useRef<HTMLInputElement>(null);
 
   const [categories, setCategories] = useState<Category[]>(
     event?.categories.map((c) => ({
@@ -28,6 +30,13 @@ export function EventForm({ event, mode }: EventFormProps) {
       price: c.price,
     })) || [{ name: '', price: '' }]
   );
+
+  // Clear deadline input when checkbox is checked
+  useEffect(() => {
+    if (noDeadline && deadlineInputRef.current) {
+      deadlineInputRef.current.value = '';
+    }
+  }, [noDeadline]);
 
   const addCategory = () => {
     setCategories([...categories, { name: '', price: '' }]);
@@ -110,12 +119,26 @@ export function EventForm({ event, mode }: EventFormProps) {
         placeholder="https://example.com/register"
       />
 
-      <Input
-        label="⏰ Payment Deadline"
-        name="paymentDeadline"
-        type="date"
-        defaultValue={event?.paymentDeadline || ''}
-      />
+      <div className="space-y-3">
+        <Input
+          ref={deadlineInputRef}
+          label="⏰ Payment Deadline"
+          name="paymentDeadline"
+          type="date"
+          defaultValue={event?.paymentDeadline || ''}
+          disabled={noDeadline}
+          className={noDeadline ? 'opacity-50' : ''}
+        />
+        <label className="flex items-center gap-2 cursor-pointer text-sm text-stone-600">
+          <input
+            type="checkbox"
+            checked={noDeadline}
+            onChange={(e) => setNoDeadline(e.target.checked)}
+            className="w-4 h-4 rounded border-stone-300 text-rose-500 focus:ring-rose-400"
+          />
+          <span>No payment deadline specified yet</span>
+        </label>
+      </div>
 
       <div>
         <label className="block text-sm font-bold text-stone-700 mb-3 flex items-center gap-2">
@@ -144,17 +167,18 @@ export function EventForm({ event, mode }: EventFormProps) {
       </div>
 
       <div className="flex gap-4 pt-6 border-t border-rose-100">
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting
-            ? '⏳ Saving...'
-            : mode === 'create'
-            ? '✨ Create Event'
-            : '💾 Update Event'}
+        <Button
+          type="submit"
+          isLoading={isSubmitting}
+          loadingText={mode === 'create' ? 'Creating...' : 'Saving...'}
+        >
+          {mode === 'create' ? '✨ Create Event' : '💾 Update Event'}
         </Button>
         <Button
           type="button"
           variant="outline"
           onClick={() => router.back()}
+          disabled={isSubmitting}
         >
           Cancel
         </Button>

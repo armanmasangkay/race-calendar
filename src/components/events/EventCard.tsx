@@ -75,18 +75,19 @@ export function EventCard({ event, showActions = true, compact = false }: EventC
           </div>
 
           {/* Payment Deadline */}
-          {event.paymentDeadline && (
-            <p
-              className={cn(
-                'text-sm mt-4 flex items-center gap-2 font-medium',
-                isDeadlinePassed ? 'text-rose-500' : 'text-stone-500'
-              )}
-            >
-              <span>⏰</span>
-              Payment deadline: {format(new Date(event.paymentDeadline), 'MMM d, yyyy')}
-              {isDeadlinePassed && ' (Passed ❌)'}
-            </p>
-          )}
+          <p
+            className={cn(
+              'text-sm mt-4 flex items-center gap-2 font-medium',
+              isDeadlinePassed ? 'text-rose-500' : event.paymentDeadline ? 'text-stone-500' : 'text-stone-400 italic'
+            )}
+          >
+            <span>⏰</span>
+            Payment deadline:{' '}
+            {event.paymentDeadline
+              ? format(new Date(event.paymentDeadline), 'MMM d, yyyy')
+              : 'To be announced'}
+            {isDeadlinePassed && ' (Passed ❌)'}
+          </p>
 
           {/* Registration Link */}
           {event.registrationLink && (

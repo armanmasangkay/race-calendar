@@ -1,22 +1,26 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 import { cn } from '@/lib/utils/cn';
+import { Spinner } from './Spinner';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
+  isLoading?: boolean;
+  loadingText?: string;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', ...props }, ref) => {
+  ({ className, variant = 'primary', size = 'md', isLoading, loadingText, children, disabled, ...props }, ref) => {
     return (
       <button
         ref={ref}
+        disabled={disabled || isLoading}
         className={cn(
-          'inline-flex items-center justify-center font-semibold cursor-pointer',
+          'inline-flex items-center justify-center gap-2 font-semibold cursor-pointer',
           'rounded-xl transition-all duration-300 ease-out',
           'transform hover:scale-105 hover:-translate-y-0.5',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-rose-400',
-          'disabled:pointer-events-none disabled:opacity-50 disabled:transform-none',
+          'disabled:pointer-events-none disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed',
           'shadow-sm hover:shadow-md',
           {
             'bg-gradient-to-r from-rose-500 to-rose-400 text-white hover:from-rose-600 hover:to-rose-500': variant === 'primary',
@@ -33,7 +37,16 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           className
         )}
         {...props}
-      />
+      >
+        {isLoading ? (
+          <>
+            <Spinner size={size === 'lg' ? 'md' : 'sm'} />
+            <span>{loadingText || 'Loading...'}</span>
+          </>
+        ) : (
+          children
+        )}
+      </button>
     );
   }
 );

@@ -33,9 +33,10 @@ export function DeleteButton({ eventId }: DeleteButtonProps) {
           variant="danger"
           size="sm"
           onClick={handleDelete}
-          disabled={isDeleting}
+          isLoading={isDeleting}
+          loadingText="Deleting..."
         >
-          {isDeleting ? '⏳ Deleting...' : '🗑️ Yes, Delete'}
+          🗑️ Yes, Delete
         </Button>
         <Button
           variant="outline"
