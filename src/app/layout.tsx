@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import { MobileNav } from "@/components/MobileNav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -35,7 +36,8 @@ export default function RootLayout({
                 <span className="text-2xl">🏃</span>
                 <span className="hidden sm:inline">Race Calendar</span>
               </Link>
-              <div className="flex items-center gap-4">
+              {/* Desktop Navigation */}
+              <div className="hidden sm:flex items-center gap-4">
                 <Link
                   href="/"
                   className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200"
@@ -61,6 +63,9 @@ export default function RootLayout({
                   ✨ Add Event
                 </Link>
               </div>
+
+              {/* Mobile Navigation */}
+              <MobileNav />
             </nav>
           </div>
         </header>

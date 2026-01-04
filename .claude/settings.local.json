@@ -17,7 +17,8 @@
       "Bash(npx drizzle-kit:*)",
       "Bash(npm run build:*)",
       "Bash(tree:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(cat:*)"
     ]
   }
 }
