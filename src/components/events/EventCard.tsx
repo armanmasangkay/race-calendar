@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import { Card, Button } from '@/components/ui';
 import { EventWithCategories } from '@/lib/db/schema';
 import { cn } from '@/lib/utils/cn';
@@ -46,6 +46,11 @@ export function EventCard({ event, showActions = true, compact = false }: EventC
     )}>
       <div className="flex justify-between items-start">
         <div className="flex-1">
+          {isHappeningToday && !isCancelled && (
+            <span className="inline-block mb-2 px-3 py-1 text-xs font-bold bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-full uppercase animate-pulse-soft">
+              🔥 Race Day!
+            </span>
+          )}
           <Link href={`/events/${event.id}`} className="group">
             <h3 className={cn(
               'text-lg font-bold text-stone-800 group-hover:text-rose-500 transition-colors flex items-center gap-2',
@@ -53,11 +58,6 @@ export function EventCard({ event, showActions = true, compact = false }: EventC
             )}>
               <span className="text-xl">🏃</span>
               {event.name}
-              {isHappeningToday && !isCancelled && (
-                <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-full uppercase animate-pulse-soft">
-                  Race Day!
-                </span>
-              )}
               {isCancelled && (
                 <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-red-100 text-red-600 rounded-full uppercase no-underline inline-block" style={{ textDecoration: 'none' }}>
                   Cancelled
@@ -71,6 +71,14 @@ export function EventCard({ event, showActions = true, compact = false }: EventC
               {format(raceDate, 'EEEE, MMMM d, yyyy')}
             </span>
           </div>
+          {isUpcoming && !isHappeningToday && !isCancelled && (
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-rose-400">⏳</span>
+              <span className="text-sm text-rose-500 font-medium">
+                {formatDistanceToNow(raceDate, { addSuffix: true })}
+              </span>
+            </div>
+          )}
           <div className={cn('flex items-center gap-2 mt-1', isCancelled && 'line-through text-stone-400')}>
             <span className="text-amber-500">📍</span>
             <span className="text-sm text-stone-600">{event.location}</span>
