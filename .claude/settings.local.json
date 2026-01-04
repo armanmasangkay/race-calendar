@@ -13,7 +13,9 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" auth status)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo create race-calendar --public --description \"Race Calendar - Track and manage running race events\" --source=. --remote=origin --push)",
       "Bash(git push:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npx drizzle-kit:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }

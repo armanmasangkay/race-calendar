@@ -17,33 +17,50 @@ const categoryColors = [
   'bg-violet-100 text-violet-700',
 ];
 
+function isPromoActive(promoDeadline: string | null): boolean {
+  if (!promoDeadline) return true;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return new Date(promoDeadline) >= today;
+}
+
 export function EventCard({ event, showActions = true, compact = false }: EventCardProps) {
   const isDeadlinePassed =
     event.paymentDeadline && new Date(event.paymentDeadline) < new Date();
 
   const raceDate = new Date(event.raceDate);
   const isUpcoming = raceDate >= new Date();
+  const isCancelled = event.isCancelled;
 
   return (
     <Card className={cn(
       'p-5 transition-all duration-300',
-      !isUpcoming && 'opacity-60 grayscale'
+      !isUpcoming && !isCancelled && 'opacity-60 grayscale',
+      isCancelled && 'opacity-70 bg-stone-50'
     )}>
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <Link href={`/events/${event.id}`} className="group">
-            <h3 className="text-lg font-bold text-stone-800 group-hover:text-rose-500 transition-colors flex items-center gap-2">
+            <h3 className={cn(
+              'text-lg font-bold text-stone-800 group-hover:text-rose-500 transition-colors flex items-center gap-2',
+              isCancelled && 'line-through text-stone-500'
+            )}>
               <span className="text-xl">🏃</span>
               {event.name}
+              {isCancelled && (
+                <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-red-100 text-red-600 rounded-full uppercase no-underline inline-block" style={{ textDecoration: 'none' }}>
+                  Cancelled
+                </span>
+              )}
             </h3>
           </Link>
-          <div className="flex items-center gap-2 mt-2">
+          <div className={cn('flex items-center gap-2 mt-2', isCancelled && 'line-through text-stone-400')}>
             <span className="text-teal-500">📅</span>
             <span className="text-sm text-stone-600 font-medium">
               {format(raceDate, 'EEEE, MMMM d, yyyy')}
             </span>
           </div>
-          <div className="flex items-center gap-2 mt-1">
+          <div className={cn('flex items-center gap-2 mt-1', isCancelled && 'line-through text-stone-400')}>
             <span className="text-amber-500">📍</span>
             <span className="text-sm text-stone-600">{event.location}</span>
           </div>
@@ -60,37 +77,51 @@ export function EventCard({ event, showActions = true, compact = false }: EventC
       {!compact && (
         <>
           {/* Categories */}
-          <div className="mt-4 flex flex-wrap gap-2">
-            {event.categories.map((cat, index) => (
-              <span
-                key={cat.id}
-                className={cn(
-                  'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold',
-                  categoryColors[index % categoryColors.length]
-                )}
-              >
-                🏅 {cat.categoryName}: P{parseFloat(cat.price).toLocaleString()}
-              </span>
-            ))}
+          <div className={cn('mt-4 flex flex-wrap gap-2', isCancelled && 'opacity-50')}>
+            {event.categories.map((cat, index) => {
+              const hasActivePromo = cat.promoPrice && isPromoActive(cat.promoDeadline);
+
+              return (
+                <span
+                  key={cat.id}
+                  className={cn(
+                    'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold',
+                    categoryColors[index % categoryColors.length]
+                  )}
+                >
+                  🏅 {cat.categoryName}:{' '}
+                  {hasActivePromo ? (
+                    <>
+                      <span className="line-through opacity-60 mx-1">P{parseFloat(cat.price).toLocaleString()}</span>
+                      <span className="font-bold">P{parseFloat(cat.promoPrice!).toLocaleString()}</span>
+                    </>
+                  ) : (
+                    <>P{parseFloat(cat.price).toLocaleString()}</>
+                  )}
+                </span>
+              );
+            })}
           </div>
 
-          {/* Payment Deadline */}
-          <p
-            className={cn(
-              'text-sm mt-4 flex items-center gap-2 font-medium',
-              isDeadlinePassed ? 'text-rose-500' : event.paymentDeadline ? 'text-stone-500' : 'text-stone-400 italic'
-            )}
-          >
-            <span>⏰</span>
-            Payment deadline:{' '}
-            {event.paymentDeadline
-              ? format(new Date(event.paymentDeadline), 'MMM d, yyyy')
-              : 'To be announced'}
-            {isDeadlinePassed && ' (Passed ❌)'}
-          </p>
+          {/* Payment Deadline - hide when cancelled */}
+          {!isCancelled && (
+            <p
+              className={cn(
+                'text-sm mt-4 flex items-center gap-2 font-medium',
+                isDeadlinePassed ? 'text-rose-500' : event.paymentDeadline ? 'text-stone-500' : 'text-stone-400 italic'
+              )}
+            >
+              <span>⏰</span>
+              Payment deadline:{' '}
+              {event.paymentDeadline
+                ? format(new Date(event.paymentDeadline), 'MMM d, yyyy')
+                : 'To be announced'}
+              {isDeadlinePassed && ' (Passed ❌)'}
+            </p>
+          )}
 
-          {/* Registration Link */}
-          {event.registrationLink && (
+          {/* Registration Link - hide when cancelled */}
+          {event.registrationLink && !isCancelled && (
             <a
               href={event.registrationLink}
               target="_blank"

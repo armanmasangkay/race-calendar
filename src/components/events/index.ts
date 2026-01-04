@@ -4,3 +4,4 @@ export { EventList } from './EventList';
 export { CategoryInput } from './CategoryInput';
 export { MonthFilter } from './MonthFilter';
 export { DeleteButton } from './DeleteButton';
+export { CancelButton } from './CancelButton';

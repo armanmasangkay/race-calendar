@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, text, date, timestamp, decimal, integer } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, date, timestamp, decimal, integer, boolean } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 export const events = pgTable('events', {
@@ -8,6 +8,7 @@ export const events = pgTable('events', {
   location: varchar('location', { length: 255 }).notNull(),
   registrationLink: text('registration_link'),
   paymentDeadline: date('payment_deadline'),
+  isCancelled: boolean('is_cancelled').notNull().default(false),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -17,6 +18,8 @@ export const eventCategories = pgTable('event_categories', {
   eventId: integer('event_id').notNull().references(() => events.id, { onDelete: 'cascade' }),
   categoryName: varchar('category_name', { length: 100 }).notNull(),
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
+  promoPrice: decimal('promo_price', { precision: 10, scale: 2 }),
+  promoDeadline: date('promo_deadline'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 

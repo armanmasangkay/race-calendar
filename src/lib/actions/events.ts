@@ -12,7 +12,7 @@ export async function createEvent(formData: FormData) {
     raceDate: formData.get('raceDate') as string,
     location: formData.get('location') as string,
     registrationLink: formData.get('registrationLink') as string,
-    paymentDeadline: formData.get('paymentDeadline') as string,
+    paymentDeadline: formData.get('paymentDeadline') || undefined,
     categories: JSON.parse(formData.get('categories') as string),
   };
 
@@ -32,6 +32,8 @@ export async function createEvent(formData: FormData) {
         eventId: newEvent.id,
         categoryName: cat.name,
         price: cat.price,
+        promoPrice: cat.promoPrice || null,
+        promoDeadline: cat.promoDeadline || null,
       }))
     );
   }
@@ -48,7 +50,7 @@ export async function updateEvent(id: number, formData: FormData) {
     raceDate: formData.get('raceDate') as string,
     location: formData.get('location') as string,
     registrationLink: formData.get('registrationLink') as string,
-    paymentDeadline: formData.get('paymentDeadline') as string,
+    paymentDeadline: formData.get('paymentDeadline') || undefined,
     categories: JSON.parse(formData.get('categories') as string),
   };
 
@@ -72,6 +74,8 @@ export async function updateEvent(id: number, formData: FormData) {
         eventId: id,
         categoryName: cat.name,
         price: cat.price,
+        promoPrice: cat.promoPrice || null,
+        promoDeadline: cat.promoDeadline || null,
       }))
     );
   }
@@ -155,4 +159,30 @@ export async function getEventsByYear(year: string): Promise<EventWithCategories
   });
 
   return result;
+}
+
+export async function cancelEvent(id: number) {
+  await db.update(events).set({
+    isCancelled: true,
+    updatedAt: new Date(),
+  }).where(eq(events.id, id));
+
+  revalidatePath('/');
+  revalidatePath('/events');
+  revalidatePath(`/events/${id}`);
+
+  return { success: true };
+}
+
+export async function restoreEvent(id: number) {
+  await db.update(events).set({
+    isCancelled: false,
+    updatedAt: new Date(),
+  }).where(eq(events.id, id));
+
+  revalidatePath('/');
+  revalidatePath('/events');
+  revalidatePath(`/events/${id}`);
+
+  return { success: true };
 }

@@ -6,6 +6,11 @@ export const categorySchema = z.object({
     (val) => !isNaN(parseFloat(val)) && parseFloat(val) >= 0,
     'Price must be a valid positive number'
   ),
+  promoPrice: z.string().optional().refine(
+    (val) => !val || (!isNaN(parseFloat(val)) && parseFloat(val) >= 0),
+    'Promo price must be a valid positive number'
+  ),
+  promoDeadline: z.string().optional().or(z.literal('')),
 });
 
 export const eventSchema = z.object({

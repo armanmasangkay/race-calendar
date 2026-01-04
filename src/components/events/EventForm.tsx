@@ -10,6 +10,9 @@ import { EventWithCategories } from '@/lib/db/schema';
 interface Category {
   name: string;
   price: string;
+  promoPrice?: string;
+  promoDeadline?: string;
+  hasPromo?: boolean;
 }
 
 interface EventFormProps {
@@ -28,7 +31,10 @@ export function EventForm({ event, mode }: EventFormProps) {
     event?.categories.map((c) => ({
       name: c.categoryName,
       price: c.price,
-    })) || [{ name: '', price: '' }]
+      promoPrice: c.promoPrice || '',
+      promoDeadline: c.promoDeadline || '',
+      hasPromo: !!(c.promoPrice),
+    })) || [{ name: '', price: '', promoPrice: '', promoDeadline: '', hasPromo: false }]
   );
 
   // Clear deadline input when checkbox is checked
@@ -39,7 +45,7 @@ export function EventForm({ event, mode }: EventFormProps) {
   }, [noDeadline]);
 
   const addCategory = () => {
-    setCategories([...categories, { name: '', price: '' }]);
+    setCategories([...categories, { name: '', price: '', promoPrice: '', promoDeadline: '', hasPromo: false }]);
   };
 
   const removeCategory = (index: number) => {

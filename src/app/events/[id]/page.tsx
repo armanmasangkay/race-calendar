@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { Button, Card } from '@/components/ui';
-import { DeleteButton } from '@/components/events';
+import { DeleteButton, CancelButton } from '@/components/events';
 import { getEventById } from '@/lib/actions/events';
 import { cn } from '@/lib/utils/cn';
 
@@ -12,6 +12,13 @@ interface EventDetailPageProps {
 
 const categoryBgColors = ['bg-rose-50', 'bg-teal-50', 'bg-amber-50', 'bg-violet-50'];
 const categoryTextColors = ['text-rose-600', 'text-teal-600', 'text-amber-600', 'text-violet-600'];
+
+function isPromoActive(promoDeadline: string | null): boolean {
+  if (!promoDeadline) return true;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return new Date(promoDeadline) >= today;
+}
 
 export default async function EventDetailPage({ params }: EventDetailPageProps) {
   const { id } = await params;
@@ -24,6 +31,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
   const raceDate = new Date(event.raceDate);
   const isDeadlinePassed =
     event.paymentDeadline && new Date(event.paymentDeadline) < new Date();
+  const isCancelled = event.isCancelled;
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -35,64 +43,101 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
         Back to Events
       </Link>
 
-      <Card className="p-8">
-        <h1 className="text-3xl font-bold text-stone-800 mb-6 flex items-center gap-3">
+      <Card className={cn('p-8', isCancelled && 'bg-stone-50')}>
+        {isCancelled && (
+          <div className="mb-6 px-4 py-3 bg-red-50 border border-red-200 rounded-xl">
+            <p className="text-red-600 font-bold text-center uppercase tracking-wide">
+              This event has been cancelled
+            </p>
+          </div>
+        )}
+
+        <h1 className={cn(
+          'text-3xl font-bold text-stone-800 mb-6 flex items-center gap-3',
+          isCancelled && 'line-through text-stone-500'
+        )}>
           <span className="text-4xl">🏃</span>
           {event.name}
         </h1>
 
         <div className="space-y-4">
-          <div className="flex items-center gap-3">
+          <div className={cn('flex items-center gap-3', isCancelled && 'opacity-60')}>
             <span className="text-2xl">📅</span>
-            <span className="text-lg text-stone-700 font-medium">
+            <span className={cn('text-lg text-stone-700 font-medium', isCancelled && 'line-through')}>
               {format(raceDate, 'EEEE, MMMM d, yyyy')}
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className={cn('flex items-center gap-3', isCancelled && 'opacity-60')}>
             <span className="text-2xl">📍</span>
-            <span className="text-lg text-stone-700">{event.location}</span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">⏰</span>
-            <span className={cn(
-              'text-lg font-medium',
-              isDeadlinePassed ? 'text-rose-500' : event.paymentDeadline ? 'text-stone-700' : 'text-stone-400 italic'
-            )}>
-              Payment Deadline:{' '}
-              {event.paymentDeadline
-                ? format(new Date(event.paymentDeadline), 'MMMM d, yyyy')
-                : 'To be announced'}
-              {isDeadlinePassed && ' (Passed ❌)'}
+            <span className={cn('text-lg text-stone-700', isCancelled && 'line-through')}>
+              {event.location}
             </span>
           </div>
+
+          {!isCancelled && (
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">⏰</span>
+              <span className={cn(
+                'text-lg font-medium',
+                isDeadlinePassed ? 'text-rose-500' : event.paymentDeadline ? 'text-stone-700' : 'text-stone-400 italic'
+              )}>
+                Payment Deadline:{' '}
+                {event.paymentDeadline
+                  ? format(new Date(event.paymentDeadline), 'MMMM d, yyyy')
+                  : 'To be announced'}
+                {isDeadlinePassed && ' (Passed ❌)'}
+              </span>
+            </div>
+          )}
         </div>
 
-        <div className="mt-8">
+        <div className={cn('mt-8', isCancelled && 'opacity-60')}>
           <h2 className="text-xl font-bold text-stone-800 mb-4 flex items-center gap-2">
             <span>🏅</span>
             Race Categories
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {event.categories.map((cat, index) => (
-              <div
-                key={cat.id}
-                className={cn(
-                  'flex justify-between items-center rounded-xl px-5 py-4 border border-transparent hover:border-rose-200 transition-all',
-                  categoryBgColors[index % categoryBgColors.length]
-                )}
-              >
-                <span className="font-bold text-stone-800">{cat.categoryName}</span>
-                <span className={cn('font-bold', categoryTextColors[index % categoryTextColors.length])}>
-                  P{parseFloat(cat.price).toLocaleString()}
-                </span>
-              </div>
-            ))}
+            {event.categories.map((cat, index) => {
+              const hasActivePromo = cat.promoPrice && isPromoActive(cat.promoDeadline);
+
+              return (
+                <div
+                  key={cat.id}
+                  className={cn(
+                    'rounded-xl px-5 py-4 border border-transparent hover:border-rose-200 transition-all',
+                    categoryBgColors[index % categoryBgColors.length]
+                  )}
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-stone-800">{cat.categoryName}</span>
+                    {hasActivePromo ? (
+                      <div className="text-right">
+                        <span className="line-through text-stone-400 text-sm mr-2">
+                          P{parseFloat(cat.price).toLocaleString()}
+                        </span>
+                        <span className={cn('font-bold', categoryTextColors[index % categoryTextColors.length])}>
+                          P{parseFloat(cat.promoPrice!).toLocaleString()}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className={cn('font-bold', categoryTextColors[index % categoryTextColors.length])}>
+                        P{parseFloat(cat.price).toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                  {hasActivePromo && cat.promoDeadline && (
+                    <p className="text-xs text-teal-600 mt-2">
+                      Promo until {format(new Date(cat.promoDeadline), 'MMM d, yyyy')}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {event.registrationLink && (
+        {event.registrationLink && !isCancelled && (
           <div className="mt-8">
             <a
               href={event.registrationLink}
@@ -106,10 +151,11 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
           </div>
         )}
 
-        <div className="mt-10 pt-6 border-t border-rose-100 flex gap-4">
+        <div className="mt-10 pt-6 border-t border-rose-100 flex gap-4 flex-wrap">
           <Link href={`/events/${event.id}/edit`}>
             <Button>✏️ Edit Event</Button>
           </Link>
+          <CancelButton eventId={event.id} isCancelled={isCancelled} />
           <DeleteButton eventId={event.id} />
         </div>
       </Card>

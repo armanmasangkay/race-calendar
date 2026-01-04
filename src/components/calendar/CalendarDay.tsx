@@ -19,6 +19,8 @@ const eventColors = [
   'bg-gradient-to-r from-violet-100 to-violet-200 text-violet-700 hover:from-violet-200 hover:to-violet-300',
 ];
 
+const cancelledEventStyle = 'bg-gradient-to-r from-stone-100 to-stone-200 text-stone-500 hover:from-stone-200 hover:to-stone-300';
+
 export function CalendarDay({ day, events, isCurrentMonth, isToday }: CalendarDayProps) {
   const hasEvents = events.length > 0;
 
@@ -50,10 +52,13 @@ export function CalendarDay({ day, events, isCurrentMonth, isToday }: CalendarDa
               className={cn(
                 'block text-xs truncate px-1.5 py-0.5 rounded-md mb-0.5 font-medium',
                 'transition-all duration-200 transform hover:scale-105',
-                eventColors[index % eventColors.length]
+                event.isCancelled
+                  ? cancelledEventStyle
+                  : eventColors[index % eventColors.length],
+                event.isCancelled && 'line-through'
               )}
             >
-              🏃 {event.name}
+              {event.isCancelled ? '✕ ' : '🏃 '}{event.name}
             </Link>
           ))}
           {events.length > 2 && (
