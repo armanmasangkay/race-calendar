@@ -34,6 +34,7 @@ export async function createEvent(formData: FormData) {
         price: cat.price,
         promoPrice: cat.promoPrice || null,
         promoDeadline: cat.promoDeadline || null,
+        registrationLink: cat.registrationLink || null,
       }))
     );
   }
@@ -76,6 +77,7 @@ export async function updateEvent(id: number, formData: FormData) {
         price: cat.price,
         promoPrice: cat.promoPrice || null,
         promoDeadline: cat.promoDeadline || null,
+        registrationLink: cat.registrationLink || null,
       }))
     );
   }

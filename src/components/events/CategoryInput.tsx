@@ -8,6 +8,7 @@ interface Category {
   promoPrice?: string;
   promoDeadline?: string;
   hasPromo?: boolean;
+  registrationLink?: string;
 }
 
 interface CategoryInputProps {
@@ -102,6 +103,19 @@ export function CategoryInput({
           </div>
         </div>
       )}
+
+      <div className="mt-3">
+        <Input
+          label="Registration Link (optional)"
+          type="url"
+          placeholder="https://example.com/register/category"
+          value={category.registrationLink || ''}
+          onChange={(e) => onChange({ ...category, registrationLink: e.target.value })}
+        />
+        <p className="text-xs text-stone-500 mt-1">
+          Leave blank to use the event&apos;s main registration link
+        </p>
+      </div>
     </div>
   );
 }

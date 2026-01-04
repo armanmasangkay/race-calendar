@@ -20,6 +20,7 @@ export const eventCategories = pgTable('event_categories', {
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
   promoPrice: decimal('promo_price', { precision: 10, scale: 2 }),
   promoDeadline: date('promo_deadline'),
+  registrationLink: text('registration_link'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 

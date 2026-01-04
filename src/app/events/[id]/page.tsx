@@ -137,19 +137,58 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
           </div>
         </div>
 
-        {event.registrationLink && !isCancelled && (
-          <div className="mt-8">
-            <a
-              href={event.registrationLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-teal-500 to-teal-400 text-white px-8 py-4 rounded-xl hover:from-teal-600 hover:to-teal-500 transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 font-bold text-lg shadow-lg shadow-teal-200"
-            >
-              🎯 Register Now
-              <span>→</span>
-            </a>
-          </div>
-        )}
+        {!isCancelled && (() => {
+          const categoryLinks = event.categories.filter(cat => cat.registrationLink);
+          const buttonColors = [
+            'bg-gradient-to-r from-rose-500 to-rose-400 shadow-rose-200',
+            'bg-gradient-to-r from-teal-500 to-teal-400 shadow-teal-200',
+            'bg-gradient-to-r from-amber-500 to-amber-400 shadow-amber-200',
+            'bg-gradient-to-r from-violet-500 to-violet-400 shadow-violet-200',
+          ];
+
+          if (categoryLinks.length > 0) {
+            return (
+              <div className="mt-8">
+                <h2 className="text-xl font-bold text-stone-800 mb-4 flex items-center gap-2">
+                  <span>🎯</span>
+                  Registration
+                </h2>
+                <div className="flex flex-wrap gap-3">
+                  {categoryLinks.map((cat, index) => (
+                    <a
+                      key={cat.id}
+                      href={cat.registrationLink!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        'inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 shadow-lg text-white',
+                        buttonColors[index % buttonColors.length]
+                      )}
+                    >
+                      {cat.categoryName}
+                      <span>→</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          } else if (event.registrationLink) {
+            return (
+              <div className="mt-8">
+                <a
+                  href={event.registrationLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 bg-gradient-to-r from-teal-500 to-teal-400 text-white px-8 py-4 rounded-xl hover:from-teal-600 hover:to-teal-500 transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 font-bold text-lg shadow-lg shadow-teal-200"
+                >
+                  🎯 Register Now
+                  <span>→</span>
+                </a>
+              </div>
+            );
+          }
+          return null;
+        })()}
 
         <div className="mt-10 pt-6 border-t border-rose-100 flex gap-4 flex-wrap">
           <Link href={`/events/${event.id}/edit`}>

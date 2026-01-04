@@ -120,18 +120,47 @@ export function EventCard({ event, showActions = true, compact = false }: EventC
             </p>
           )}
 
-          {/* Registration Link - hide when cancelled */}
-          {event.registrationLink && !isCancelled && (
-            <a
-              href={event.registrationLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 mt-4 text-sm font-semibold text-teal-600 hover:text-teal-700 transition-colors group"
-            >
-              🎯 Register Here
-              <span className="group-hover:translate-x-1 transition-transform">→</span>
-            </a>
-          )}
+          {/* Registration Links - hide when cancelled */}
+          {!isCancelled && (() => {
+            const categoryLinks = event.categories.filter(cat => cat.registrationLink);
+
+            if (categoryLinks.length > 0) {
+              return (
+                <div className="mt-4 space-y-2">
+                  <p className="text-sm font-semibold text-stone-600 flex items-center gap-2">
+                    <span>🎯</span> Registration
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {categoryLinks.map((cat) => (
+                      <a
+                        key={cat.id}
+                        href={cat.registrationLink!}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold text-teal-600 bg-teal-50 rounded-full hover:bg-teal-100 transition-colors"
+                      >
+                        {cat.categoryName}
+                        <span>→</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            } else if (event.registrationLink) {
+              return (
+                <a
+                  href={event.registrationLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 mt-4 text-sm font-semibold text-teal-600 hover:text-teal-700 transition-colors group"
+                >
+                  🎯 Register Here
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </a>
+              );
+            }
+            return null;
+          })()}
         </>
       )}
     </Card>

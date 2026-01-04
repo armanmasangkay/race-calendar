@@ -11,6 +11,7 @@ export const categorySchema = z.object({
     'Promo price must be a valid positive number'
   ),
   promoDeadline: z.string().optional().or(z.literal('')),
+  registrationLink: z.string().url('Invalid URL').optional().or(z.literal('')),
 });
 
 export const eventSchema = z.object({

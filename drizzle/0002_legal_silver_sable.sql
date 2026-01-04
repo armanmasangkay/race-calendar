@@ -1,0 +1,1 @@
+ALTER TABLE "event_categories" ADD COLUMN "registration_link" text;
