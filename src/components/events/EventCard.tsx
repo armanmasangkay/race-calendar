@@ -53,6 +53,11 @@ export function EventCard({ event, showActions = true, compact = false }: EventC
             )}>
               <span className="text-xl">🏃</span>
               {event.name}
+              {isHappeningToday && !isCancelled && (
+                <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-full uppercase animate-pulse-soft">
+                  Race Day!
+                </span>
+              )}
               {isCancelled && (
                 <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-red-100 text-red-600 rounded-full uppercase no-underline inline-block" style={{ textDecoration: 'none' }}>
                   Cancelled
