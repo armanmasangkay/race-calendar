@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { events, eventCategories, EventWithCategories } from '@/lib/db/schema';
+import { events, eventCategories, eventQueue, EventWithCategories } from '@/lib/db/schema';
 import { eq, gte, lte, asc, and } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { eventSchema } from '@/lib/validations/event';
@@ -185,4 +185,15 @@ export async function restoreEvent(id: number) {
   revalidatePath(`/events/${id}`);
 
   return { success: true };
+}
+
+export async function createEventFromQueue(formData: FormData, queueItemId: number) {
+  const result = await createEvent(formData);
+
+  if (result.success) {
+    await db.delete(eventQueue).where(eq(eventQueue.id, queueItemId));
+    revalidatePath('/queue');
+  }
+
+  return result;
 }

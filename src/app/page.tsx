@@ -2,7 +2,9 @@ import { Suspense } from 'react';
 import { format } from 'date-fns';
 import { CalendarView } from '@/components/calendar';
 import { EventList } from '@/components/events';
+import { QuickQueueView } from '@/components/queue';
 import { getEvents } from '@/lib/actions/events';
+import { getQueueItems } from '@/lib/actions/queue';
 
 interface HomePageProps {
   searchParams: Promise<{ month?: string }>;
@@ -11,7 +13,10 @@ interface HomePageProps {
 export default async function HomePage({ searchParams }: HomePageProps) {
   const params = await searchParams;
   const currentMonth = params.month || format(new Date(), 'yyyy-MM');
-  const events = await getEvents(currentMonth);
+  const [events, queueItems] = await Promise.all([
+    getEvents(currentMonth),
+    getQueueItems(),
+  ]);
 
   return (
     <div>
@@ -42,12 +47,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </Suspense>
         </div>
 
-        <div>
-          <h2 className="text-xl font-bold text-stone-800 mb-4 flex items-center gap-2">
-            <span>📆</span>
-            Events in {format(new Date(currentMonth + '-01'), 'MMMM yyyy')}
-          </h2>
-          <EventList events={events} />
+        <div className="space-y-6">
+          <QuickQueueView items={queueItems} />
+
+          <div>
+            <h2 className="text-xl font-bold text-stone-800 mb-4 flex items-center gap-2">
+              <span>📆</span>
+              Events in {format(new Date(currentMonth + '-01'), 'MMMM yyyy')}
+            </h2>
+            <EventList events={events} />
+          </div>
         </div>
       </div>
     </div>

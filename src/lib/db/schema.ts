@@ -42,3 +42,14 @@ export type NewEventCategory = typeof eventCategories.$inferInsert;
 export type EventWithCategories = Event & {
   categories: EventCategory[];
 };
+
+// Event Queue - for tracking Facebook links to add later
+export const eventQueue = pgTable('event_queue', {
+  id: serial('id').primaryKey(),
+  url: text('url').notNull(),
+  notes: text('notes'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export type QueueItem = typeof eventQueue.$inferSelect;
+export type NewQueueItem = typeof eventQueue.$inferInsert;

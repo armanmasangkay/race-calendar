@@ -49,6 +49,12 @@ export default function RootLayout({
                   🎯 All Events
                 </Link>
                 <Link
+                  href="/queue"
+                  className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200"
+                >
+                  📋 Queue
+                </Link>
+                <Link
                   href="/events/new"
                   className="bg-gradient-to-r from-rose-500 to-rose-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:from-rose-600 hover:to-rose-500 transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
                 >

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@/components/ui';
 import { CategoryInput } from './CategoryInput';
-import { createEvent, updateEvent } from '@/lib/actions/events';
+import { createEvent, updateEvent, createEventFromQueue } from '@/lib/actions/events';
 import { EventWithCategories } from '@/lib/db/schema';
 
 interface Category {
@@ -18,9 +18,10 @@ interface Category {
 interface EventFormProps {
   event?: EventWithCategories;
   mode: 'create' | 'edit';
+  queueItemId?: number | null;
 }
 
-export function EventForm({ event, mode }: EventFormProps) {
+export function EventForm({ event, mode, queueItemId }: EventFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,7 +68,9 @@ export function EventForm({ event, mode }: EventFormProps) {
       formData.append('categories', JSON.stringify(categories));
 
       if (mode === 'create') {
-        const result = await createEvent(formData);
+        const result = queueItemId
+          ? await createEventFromQueue(formData, queueItemId)
+          : await createEvent(formData);
         if (result.success) {
           router.push('/events');
         }
