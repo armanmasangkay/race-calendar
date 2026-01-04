@@ -90,6 +90,21 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
               </span>
             </div>
           )}
+
+          {!isCancelled && event.detailsLink && (
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">🌐</span>
+              <a
+                href={event.detailsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-lg font-medium text-teal-600 hover:text-teal-700 transition-colors group inline-flex items-center gap-2"
+              >
+                Official Page
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </a>
+            </div>
+          )}
         </div>
 
         <div className={cn('mt-8', isCancelled && 'opacity-60')}>

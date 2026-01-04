@@ -1,21 +1,25 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { Button } from '@/components/ui';
-import { EventList, MonthFilter } from '@/components/events';
-import { getEvents, getEventsByYear } from '@/lib/actions/events';
+import { EventList, MonthFilter, SearchBar } from '@/components/events';
+import { getEvents, getEventsByYear, searchEvents } from '@/lib/actions/events';
 import { format } from 'date-fns';
 
 interface EventsPageProps {
-  searchParams: Promise<{ month?: string; year?: string }>;
+  searchParams: Promise<{ month?: string; year?: string; search?: string }>;
 }
 
 export default async function EventsPage({ searchParams }: EventsPageProps) {
   const params = await searchParams;
   const currentYear = params.year || format(new Date(), 'yyyy');
   const isYearView = !params.month;
+  const isSearching = !!params.search;
 
-  const events = params.month
-    ? await getEvents(params.month)
-    : await getEventsByYear(currentYear);
+  const events = isSearching
+    ? await searchEvents(params.search!)
+    : params.month
+      ? await getEvents(params.month)
+      : await getEventsByYear(currentYear);
 
   return (
     <div>
@@ -29,9 +33,21 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
         </Link>
       </div>
 
-      <MonthFilter currentMonth={params.month} currentYear={currentYear} />
+      <Suspense fallback={null}>
+        <SearchBar className="mb-4" />
+      </Suspense>
 
-      <EventList events={events} groupByMonth={isYearView} />
+      {!isSearching && (
+        <MonthFilter currentMonth={params.month} currentYear={currentYear} />
+      )}
+
+      {isSearching && (
+        <p className="text-stone-500 mb-4">
+          {events.length} result{events.length !== 1 ? 's' : ''} for &quot;{params.search}&quot;
+        </p>
+      )}
+
+      <EventList events={events} groupByMonth={isYearView && !isSearching} />
     </div>
   );
 }

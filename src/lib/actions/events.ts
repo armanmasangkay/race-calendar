@@ -2,9 +2,27 @@
 
 import { db } from '@/lib/db';
 import { events, eventCategories, eventQueue, EventWithCategories } from '@/lib/db/schema';
-import { eq, gte, lte, asc, and } from 'drizzle-orm';
+import { eq, gte, lte, asc, and, ilike } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { eventSchema } from '@/lib/validations/event';
+
+// Helper to determine if an event is active (not cancelled and hasn't passed)
+function isEventActive(event: EventWithCategories): boolean {
+  const today = new Date().toISOString().split('T')[0];
+  return !event.isCancelled && event.raceDate >= today;
+}
+
+// Sort events: active first (by date), then inactive (by date)
+function sortEventsActiveFirst(events: EventWithCategories[]): EventWithCategories[] {
+  return events.sort((a, b) => {
+    const aActive = isEventActive(a);
+    const bActive = isEventActive(b);
+
+    if (aActive && !bActive) return -1;
+    if (!aActive && bActive) return 1;
+    return a.raceDate.localeCompare(b.raceDate);
+  });
+}
 
 export async function createEvent(formData: FormData) {
   const rawData = {
@@ -12,6 +30,7 @@ export async function createEvent(formData: FormData) {
     raceDate: formData.get('raceDate') as string,
     location: formData.get('location') as string,
     registrationLink: formData.get('registrationLink') as string,
+    detailsLink: formData.get('detailsLink') as string,
     paymentDeadline: formData.get('paymentDeadline') || undefined,
     categories: JSON.parse(formData.get('categories') as string),
   };
@@ -23,6 +42,7 @@ export async function createEvent(formData: FormData) {
     raceDate: validated.raceDate,
     location: validated.location,
     registrationLink: validated.registrationLink || null,
+    detailsLink: validated.detailsLink || null,
     paymentDeadline: validated.paymentDeadline || null,
   }).returning();
 
@@ -51,6 +71,7 @@ export async function updateEvent(id: number, formData: FormData) {
     raceDate: formData.get('raceDate') as string,
     location: formData.get('location') as string,
     registrationLink: formData.get('registrationLink') as string,
+    detailsLink: formData.get('detailsLink') as string,
     paymentDeadline: formData.get('paymentDeadline') || undefined,
     categories: JSON.parse(formData.get('categories') as string),
   };
@@ -62,6 +83,7 @@ export async function updateEvent(id: number, formData: FormData) {
     raceDate: validated.raceDate,
     location: validated.location,
     registrationLink: validated.registrationLink || null,
+    detailsLink: validated.detailsLink || null,
     paymentDeadline: validated.paymentDeadline || null,
     updatedAt: new Date(),
   }).where(eq(events.id, id));
@@ -120,7 +142,7 @@ export async function getEvents(month?: string): Promise<EventWithCategories[]> 
     orderBy: [asc(events.raceDate)],
   });
 
-  return result;
+  return sortEventsActiveFirst(result);
 }
 
 export async function getAllEvents(): Promise<EventWithCategories[]> {
@@ -198,4 +220,20 @@ export async function createEventFromQueue(formData: FormData, queueItemId: numb
   }
 
   return result;
+}
+
+export async function searchEvents(query: string): Promise<EventWithCategories[]> {
+  if (!query.trim()) {
+    return [];
+  }
+
+  const result = await db.query.events.findMany({
+    where: ilike(events.name, `%${query}%`),
+    with: {
+      categories: true,
+    },
+    orderBy: [asc(events.raceDate)],
+  });
+
+  return sortEventsActiveFirst(result);
 }

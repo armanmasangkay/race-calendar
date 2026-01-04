@@ -5,3 +5,4 @@ export { CategoryInput } from './CategoryInput';
 export { MonthFilter } from './MonthFilter';
 export { DeleteButton } from './DeleteButton';
 export { CancelButton } from './CancelButton';
+export { SearchBar } from './SearchBar';

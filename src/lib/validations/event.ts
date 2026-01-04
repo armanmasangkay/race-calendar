@@ -22,6 +22,7 @@ export const eventSchema = z.object({
   ),
   location: z.string().min(1, 'Location is required').max(255),
   registrationLink: z.string().url('Invalid URL').optional().or(z.literal('')),
+  detailsLink: z.string().url('Invalid URL').optional().or(z.literal('')),
   paymentDeadline: z.string().optional().or(z.literal('')),
   categories: z.array(categorySchema).min(1, 'At least one category is required'),
 });

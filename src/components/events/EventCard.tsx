@@ -161,6 +161,19 @@ export function EventCard({ event, showActions = true, compact = false }: EventC
             }
             return null;
           })()}
+
+          {/* Official Page Link - hide when cancelled */}
+          {!isCancelled && event.detailsLink && (
+            <a
+              href={event.detailsLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 mt-4 text-sm font-medium text-stone-500 hover:text-rose-500 transition-colors group"
+            >
+              🌐 Official Page
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </a>
+          )}
         </>
       )}
     </Card>

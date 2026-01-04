@@ -7,6 +7,7 @@ export const events = pgTable('events', {
   raceDate: date('race_date').notNull(),
   location: varchar('location', { length: 255 }).notNull(),
   registrationLink: text('registration_link'),
+  detailsLink: text('details_link'),
   paymentDeadline: date('payment_deadline'),
   isCancelled: boolean('is_cancelled').notNull().default(false),
   createdAt: timestamp('created_at').defaultNow().notNull(),

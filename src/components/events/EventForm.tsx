@@ -130,6 +130,14 @@ export function EventForm({ event, mode, queueItemId }: EventFormProps) {
         placeholder="https://example.com/register"
       />
 
+      <Input
+        label="🌐 Official Page"
+        name="detailsLink"
+        type="url"
+        defaultValue={event?.detailsLink || ''}
+        placeholder="https://facebook.com/event/..."
+      />
+
       <div className="space-y-3">
         <Input
           ref={deadlineInputRef}
