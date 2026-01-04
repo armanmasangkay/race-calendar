@@ -29,13 +29,19 @@ export function EventCard({ event, showActions = true, compact = false }: EventC
     event.paymentDeadline && new Date(event.paymentDeadline) < new Date();
 
   const raceDate = new Date(event.raceDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const raceDateOnly = new Date(raceDate);
+  raceDateOnly.setHours(0, 0, 0, 0);
+  const isHappeningToday = raceDateOnly.getTime() === today.getTime();
   const isUpcoming = raceDate >= new Date();
   const isCancelled = event.isCancelled;
 
   return (
     <Card className={cn(
       'p-5 transition-all duration-300',
-      !isUpcoming && !isCancelled && 'opacity-60 grayscale',
+      isHappeningToday && !isCancelled && 'ring-2 ring-rose-400 animate-glow-pulse bg-gradient-to-r from-rose-50 to-amber-50',
+      !isUpcoming && !isCancelled && !isHappeningToday && 'opacity-60 grayscale',
       isCancelled && 'opacity-70 bg-stone-50'
     )}>
       <div className="flex justify-between items-start">
