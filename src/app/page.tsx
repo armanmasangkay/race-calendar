@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { format } from 'date-fns';
-import { CalendarView } from '@/components/calendar';
+import { CalendarView, MobileMonthView } from '@/components/calendar';
 import { EventList } from '@/components/events';
 import { QuickQueueView } from '@/components/queue';
 import { getEvents } from '@/lib/actions/events';
@@ -32,7 +32,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+        {/* Desktop: Calendar view */}
+        <div className="hidden lg:block lg:col-span-2">
           <Suspense fallback={
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-rose-100 animate-pulse">
               <div className="h-8 bg-rose-100 rounded-xl w-1/3 mb-4"></div>
@@ -47,10 +48,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </Suspense>
         </div>
 
+        {/* Mobile: Events list with month navigation */}
+        <div className="lg:hidden">
+          <MobileMonthView events={events} currentMonth={currentMonth} />
+        </div>
+
         <div className="space-y-6">
           <QuickQueueView items={queueItems} />
 
-          <div>
+          {/* Desktop only: Events sidebar */}
+          <div className="hidden lg:block">
             <h2 className="text-xl font-bold text-stone-800 mb-4 flex items-center gap-2">
               <span>📆</span>
               Events in {format(new Date(currentMonth + '-01'), 'MMMM yyyy')}
