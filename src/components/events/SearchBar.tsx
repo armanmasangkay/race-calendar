@@ -37,7 +37,8 @@ export function SearchBar({ className }: SearchBarProps) {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [query, router, searchParams]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, router]);
 
   const handleClear = useCallback(() => {
     setQuery('');
