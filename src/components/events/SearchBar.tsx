@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { cn } from '@/lib/utils/cn';
 
 interface SearchBarProps {
@@ -13,9 +13,14 @@ export function SearchBar({ className }: SearchBarProps) {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('search') || '';
   const [query, setQuery] = useState(initialQuery);
+  const isInternalUpdate = useRef(false);
 
-  // Sync with URL params when they change externally
+  // Sync with URL params when they change externally (e.g., browser back/forward)
   useEffect(() => {
+    if (isInternalUpdate.current) {
+      isInternalUpdate.current = false;
+      return;
+    }
     setQuery(searchParams.get('search') || '');
   }, [searchParams]);
 
@@ -33,6 +38,7 @@ export function SearchBar({ className }: SearchBarProps) {
         params.delete('search');
       }
 
+      isInternalUpdate.current = true;
       router.push(`?${params.toString()}`);
     }, 300);
 
@@ -44,6 +50,7 @@ export function SearchBar({ className }: SearchBarProps) {
     setQuery('');
     const params = new URLSearchParams(searchParams.toString());
     params.delete('search');
+    isInternalUpdate.current = true;
     router.push(`?${params.toString()}`);
   }, [router, searchParams]);
 
