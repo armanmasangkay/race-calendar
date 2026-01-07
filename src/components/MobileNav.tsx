@@ -4,7 +4,11 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-export function MobileNav() {
+interface MobileNavProps {
+  isAdmin: boolean;
+}
+
+export function MobileNav({ isAdmin }: MobileNavProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -71,18 +75,22 @@ export function MobileNav() {
             >
               🎯 All Events
             </Link>
-            <Link
-              href="/queue"
-              className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200 py-2"
-            >
-              📋 Queue
-            </Link>
-            <Link
-              href="/events/new"
-              className="bg-gradient-to-r from-rose-500 to-rose-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:from-rose-600 hover:to-rose-500 transition-all duration-300 shadow-sm hover:shadow-md text-center mt-1"
-            >
-              ✨ Add Event
-            </Link>
+            {isAdmin && (
+              <>
+                <Link
+                  href="/queue"
+                  className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200 py-2"
+                >
+                  📋 Queue
+                </Link>
+                <Link
+                  href="/events/new"
+                  className="bg-gradient-to-r from-rose-500 to-rose-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:from-rose-600 hover:to-rose-500 transition-all duration-300 shadow-sm hover:shadow-md text-center mt-1"
+                >
+                  ✨ Add Event
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

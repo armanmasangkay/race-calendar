@@ -5,6 +5,7 @@ import { events, eventCategories, eventQueue, EventWithCategories } from '@/lib/
 import { eq, gte, lte, asc, and, ilike } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { eventSchema } from '@/lib/validations/event';
+import { assertAdmin } from '@/lib/auth/admin';
 
 // Helper to determine if an event is active (not cancelled and hasn't passed)
 function isEventActive(event: EventWithCategories): boolean {
@@ -25,6 +26,8 @@ function sortEventsActiveFirst(events: EventWithCategories[]): EventWithCategori
 }
 
 export async function createEvent(formData: FormData) {
+  await assertAdmin();
+
   const rawData = {
     name: formData.get('name') as string,
     raceDate: formData.get('raceDate') as string,
@@ -66,6 +69,8 @@ export async function createEvent(formData: FormData) {
 }
 
 export async function updateEvent(id: number, formData: FormData) {
+  await assertAdmin();
+
   const rawData = {
     name: formData.get('name') as string,
     raceDate: formData.get('raceDate') as string,
@@ -112,6 +117,8 @@ export async function updateEvent(id: number, formData: FormData) {
 }
 
 export async function deleteEvent(id: number) {
+  await assertAdmin();
+
   await db.delete(events).where(eq(events.id, id));
 
   revalidatePath('/');
@@ -186,6 +193,8 @@ export async function getEventsByYear(year: string): Promise<EventWithCategories
 }
 
 export async function cancelEvent(id: number) {
+  await assertAdmin();
+
   await db.update(events).set({
     isCancelled: true,
     updatedAt: new Date(),
@@ -199,6 +208,8 @@ export async function cancelEvent(id: number) {
 }
 
 export async function restoreEvent(id: number) {
+  await assertAdmin();
+
   await db.update(events).set({
     isCancelled: false,
     updatedAt: new Date(),
@@ -212,6 +223,8 @@ export async function restoreEvent(id: number) {
 }
 
 export async function createEventFromQueue(formData: FormData, queueItemId: number) {
+  await assertAdmin();
+
   const result = await createEvent(formData);
 
   if (result.success) {

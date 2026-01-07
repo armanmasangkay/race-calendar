@@ -5,8 +5,11 @@ import { eventQueue, QueueItem } from '@/lib/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { queueItemSchema } from '@/lib/validations/queue';
+import { assertAdmin } from '@/lib/auth/admin';
 
 export async function createQueueItem(formData: FormData) {
+  await assertAdmin();
+
   const rawData = {
     url: formData.get('url') as string,
     notes: formData.get('notes') as string || undefined,
@@ -26,6 +29,8 @@ export async function createQueueItem(formData: FormData) {
 }
 
 export async function deleteQueueItem(id: number) {
+  await assertAdmin();
+
   await db.delete(eventQueue).where(eq(eventQueue.id, id));
 
   revalidatePath('/');

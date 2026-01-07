@@ -5,6 +5,7 @@ import { Button, Card } from '@/components/ui';
 import { DeleteButton, CancelButton } from '@/components/events';
 import { getEventById } from '@/lib/actions/events';
 import { cn } from '@/lib/utils/cn';
+import { auth } from '@/lib/auth';
 
 interface EventDetailPageProps {
   params: Promise<{ id: string }>;
@@ -22,12 +23,16 @@ function isPromoActive(promoDeadline: string | null): boolean {
 
 export default async function EventDetailPage({ params }: EventDetailPageProps) {
   const { id } = await params;
-  const event = await getEventById(parseInt(id));
+  const [event, session] = await Promise.all([
+    getEventById(parseInt(id)),
+    auth(),
+  ]);
 
   if (!event) {
     notFound();
   }
 
+  const isAdmin = session?.user?.isAdmin ?? false;
   const raceDate = new Date(event.raceDate);
   const isDeadlinePassed =
     event.paymentDeadline && new Date(event.paymentDeadline) < new Date();
@@ -205,13 +210,15 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
           return null;
         })()}
 
-        <div className="mt-10 pt-6 border-t border-rose-100 flex gap-4 flex-wrap">
-          <Link href={`/events/${event.id}/edit`}>
-            <Button>✏️ Edit Event</Button>
-          </Link>
-          <CancelButton eventId={event.id} isCancelled={isCancelled} />
-          <DeleteButton eventId={event.id} />
-        </div>
+        {isAdmin && (
+          <div className="mt-10 pt-6 border-t border-rose-100 flex gap-4 flex-wrap">
+            <Link href={`/events/${event.id}/edit`}>
+              <Button>✏️ Edit Event</Button>
+            </Link>
+            <CancelButton eventId={event.id} isCancelled={isCancelled} />
+            <DeleteButton eventId={event.id} />
+          </div>
+        )}
       </Card>
     </div>
   );
