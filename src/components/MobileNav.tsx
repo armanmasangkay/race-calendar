@@ -3,12 +3,18 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 interface MobileNavProps {
   isAdmin: boolean;
+  user: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  } | null;
 }
 
-export function MobileNav({ isAdmin }: MobileNavProps) {
+export function MobileNav({ isAdmin, user }: MobileNavProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -91,6 +97,48 @@ export function MobileNav({ isAdmin }: MobileNavProps) {
                 </Link>
               </>
             )}
+
+            {/* User Section */}
+            <div className="border-t border-rose-100 mt-3 pt-3">
+              {user ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {user.image ? (
+                      <img
+                        src={user.image}
+                        alt={user.name || "User"}
+                        className="w-8 h-8 rounded-full border-2 border-rose-200"
+                      />
+                    ) : (
+                      <span className="w-8 h-8 rounded-full bg-rose-100 text-rose-600 text-xs font-semibold flex items-center justify-center border-2 border-rose-200">
+                        {user.name
+                          ?.split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase()
+                          .slice(0, 2) || "?"}
+                      </span>
+                    )}
+                    <span className="text-sm text-stone-700 font-medium truncate max-w-[150px]">
+                      {user.name}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => signOut()}
+                    className="text-sm text-stone-500 hover:text-rose-600 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  href="/admin/login"
+                  className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200 py-2 block"
+                >
+                  Sign In
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       )}

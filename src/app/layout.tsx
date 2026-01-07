@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { MobileNav } from "@/components/MobileNav";
+import { UserMenu } from "@/components/UserMenu";
 import { auth } from "@/lib/auth";
 import "./globals.css";
 
@@ -70,10 +71,11 @@ export default async function RootLayout({
                     </Link>
                   </>
                 )}
+                <UserMenu user={session?.user ?? null} />
               </div>
 
               {/* Mobile Navigation */}
-              <MobileNav isAdmin={isAdmin} />
+              <MobileNav isAdmin={isAdmin} user={session?.user ?? null} />
             </nav>
           </div>
         </header>
