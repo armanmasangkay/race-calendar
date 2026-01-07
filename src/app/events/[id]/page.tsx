@@ -132,13 +132,19 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-stone-800">{cat.categoryName}</span>
                     {hasActivePromo ? (
-                      <div className="text-right">
-                        <span className="line-through text-stone-400 text-sm mr-2">
-                          P{parseFloat(cat.price).toLocaleString()}
-                        </span>
-                        <span className={cn('font-bold', categoryTextColors[index % categoryTextColors.length])}>
-                          P{parseFloat(cat.promoPrice!).toLocaleString()}
-                        </span>
+                      <div className="text-right space-y-0.5">
+                        <div>
+                          <span className="text-stone-500 text-sm">Regular:</span>{' '}
+                          <span className="text-stone-600 text-sm">
+                            P{parseFloat(cat.price).toLocaleString()}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-teal-600 text-sm font-medium">{cat.promoName || 'Promo'}:</span>{' '}
+                          <span className={cn('font-bold', categoryTextColors[index % categoryTextColors.length])}>
+                            P{parseFloat(cat.promoPrice!).toLocaleString()}
+                          </span>
+                        </div>
                       </div>
                     ) : (
                       <span className={cn('font-bold', categoryTextColors[index % categoryTextColors.length])}>
@@ -148,7 +154,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                   </div>
                   {hasActivePromo && cat.promoDeadline && (
                     <p className="text-xs text-teal-600 mt-2">
-                      Promo until {format(new Date(cat.promoDeadline), 'MMM d, yyyy')}
+                      {cat.promoName || 'Promo'} until {format(new Date(cat.promoDeadline), 'MMM d, yyyy')}
                     </p>
                   )}
                 </div>

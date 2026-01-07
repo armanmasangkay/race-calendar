@@ -56,6 +56,7 @@ export async function createEvent(formData: FormData) {
         categoryName: cat.name,
         price: cat.price,
         promoPrice: cat.promoPrice || null,
+        promoName: cat.promoName || null,
         promoDeadline: cat.promoDeadline || null,
         registrationLink: cat.registrationLink || null,
       }))
@@ -103,6 +104,7 @@ export async function updateEvent(id: number, formData: FormData) {
         categoryName: cat.name,
         price: cat.price,
         promoPrice: cat.promoPrice || null,
+        promoName: cat.promoName || null,
         promoDeadline: cat.promoDeadline || null,
         registrationLink: cat.registrationLink || null,
       }))

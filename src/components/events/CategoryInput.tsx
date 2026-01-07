@@ -6,6 +6,7 @@ interface Category {
   name: string;
   price: string;
   promoPrice?: string;
+  promoName?: string;
   promoDeadline?: string;
   hasPromo?: boolean;
   registrationLink?: string;
@@ -31,6 +32,7 @@ export function CategoryInput({
       ...category,
       hasPromo: !category.hasPromo,
       promoPrice: !category.hasPromo ? category.promoPrice : '',
+      promoName: !category.hasPromo ? category.promoName : '',
       promoDeadline: !category.hasPromo ? category.promoDeadline : '',
     });
   };
@@ -81,25 +83,35 @@ export function CategoryInput({
       </label>
 
       {category.hasPromo && (
-        <div className="flex gap-3 mt-3 pl-4 border-l-2 border-teal-200">
-          <div className="w-32">
-            <Input
-              label="Promo Price"
-              type="number"
-              min="0"
-              step="0.01"
-              placeholder="0.00"
-              value={category.promoPrice || ''}
-              onChange={(e) => onChange({ ...category, promoPrice: e.target.value })}
-            />
-          </div>
+        <div className="mt-3 pl-4 border-l-2 border-teal-200 space-y-3">
           <div className="flex-1">
             <Input
-              label="Promo Deadline"
-              type="date"
-              value={category.promoDeadline || ''}
-              onChange={(e) => onChange({ ...category, promoDeadline: e.target.value })}
+              label="Promo Name"
+              placeholder="e.g., Student Rate, Early Bird"
+              value={category.promoName || ''}
+              onChange={(e) => onChange({ ...category, promoName: e.target.value })}
             />
+          </div>
+          <div className="flex gap-3">
+            <div className="w-32">
+              <Input
+                label="Promo Price"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                value={category.promoPrice || ''}
+                onChange={(e) => onChange({ ...category, promoPrice: e.target.value })}
+              />
+            </div>
+            <div className="flex-1">
+              <Input
+                label="Promo Deadline"
+                type="date"
+                value={category.promoDeadline || ''}
+                onChange={(e) => onChange({ ...category, promoDeadline: e.target.value })}
+              />
+            </div>
           </div>
         </div>
       )}

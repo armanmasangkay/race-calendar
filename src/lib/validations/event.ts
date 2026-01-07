@@ -10,6 +10,7 @@ export const categorySchema = z.object({
     (val) => !val || (!isNaN(parseFloat(val)) && parseFloat(val) >= 0),
     'Promo price must be a valid positive number'
   ),
+  promoName: z.string().optional().or(z.literal('')),
   promoDeadline: z.string().optional().or(z.literal('')),
   registrationLink: z.string().url('Invalid URL').optional().or(z.literal('')),
 });

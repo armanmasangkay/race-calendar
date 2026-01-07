@@ -1,0 +1,1 @@
+ALTER TABLE "event_categories" ADD COLUMN "promo_name" varchar(100);

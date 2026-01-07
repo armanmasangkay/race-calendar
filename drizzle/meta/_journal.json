@@ -43,6 +43,13 @@
       "when": 1767765186454,
       "tag": "0005_stormy_power_man",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1767793100127,
+      "tag": "0006_add-promo-name",
+      "breakpoints": true
     }
   ]
 }

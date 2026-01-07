@@ -11,6 +11,7 @@ interface Category {
   name: string;
   price: string;
   promoPrice?: string;
+  promoName?: string;
   promoDeadline?: string;
   hasPromo?: boolean;
   registrationLink?: string;
@@ -34,10 +35,11 @@ export function EventForm({ event, mode, queueItemId }: EventFormProps) {
       name: c.categoryName,
       price: c.price,
       promoPrice: c.promoPrice || '',
+      promoName: c.promoName || '',
       promoDeadline: c.promoDeadline || '',
       hasPromo: !!(c.promoPrice),
       registrationLink: c.registrationLink || '',
-    })) || [{ name: '', price: '', promoPrice: '', promoDeadline: '', hasPromo: false, registrationLink: '' }]
+    })) || [{ name: '', price: '', promoPrice: '', promoName: '', promoDeadline: '', hasPromo: false, registrationLink: '' }]
   );
 
   // Clear deadline input when checkbox is checked
@@ -48,7 +50,7 @@ export function EventForm({ event, mode, queueItemId }: EventFormProps) {
   }, [noDeadline]);
 
   const addCategory = () => {
-    setCategories([...categories, { name: '', price: '', promoPrice: '', promoDeadline: '', hasPromo: false, registrationLink: '' }]);
+    setCategories([...categories, { name: '', price: '', promoPrice: '', promoName: '', promoDeadline: '', hasPromo: false, registrationLink: '' }]);
   };
 
   const removeCategory = (index: number) => {

@@ -111,10 +111,16 @@ export function EventCard({ event, showActions = true, compact = false, isAdmin 
                 >
                   🏅 {cat.categoryName}:{' '}
                   {hasActivePromo ? (
-                    <>
-                      <span className="line-through opacity-60 mx-1">P{parseFloat(cat.price).toLocaleString()}</span>
-                      <span className="font-bold">P{parseFloat(cat.promoPrice!).toLocaleString()}</span>
-                    </>
+                    <span className="flex flex-col text-xs leading-tight">
+                      <span>
+                        <span className="opacity-70">Regular:</span>{' '}
+                        <span className="opacity-80">P{parseFloat(cat.price).toLocaleString()}</span>
+                      </span>
+                      <span>
+                        <span className="opacity-90">{cat.promoName || 'Promo'}:</span>{' '}
+                        <span className="font-bold">P{parseFloat(cat.promoPrice!).toLocaleString()}</span>
+                      </span>
+                    </span>
                   ) : (
                     <>P{parseFloat(cat.price).toLocaleString()}</>
                   )}

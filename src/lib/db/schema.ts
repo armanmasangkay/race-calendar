@@ -21,6 +21,7 @@ export const eventCategories = pgTable('event_categories', {
   categoryName: varchar('category_name', { length: 100 }).notNull(),
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
   promoPrice: decimal('promo_price', { precision: 10, scale: 2 }),
+  promoName: varchar('promo_name', { length: 100 }),
   promoDeadline: date('promo_deadline'),
   registrationLink: text('registration_link'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
