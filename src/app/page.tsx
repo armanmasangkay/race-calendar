@@ -3,8 +3,10 @@ import { format } from 'date-fns';
 import { CalendarView, MobileMonthView } from '@/components/calendar';
 import { EventList, SearchBar } from '@/components/events';
 import { QuickQueueView } from '@/components/queue';
+import { AlertBanner } from '@/components/ui';
 import { getEvents, searchEvents } from '@/lib/actions/events';
 import { getQueueItems } from '@/lib/actions/queue';
+import { auth } from '@/lib/auth';
 
 interface HomePageProps {
   searchParams: Promise<{ month?: string; search?: string }>;
@@ -12,13 +14,15 @@ interface HomePageProps {
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const params = await searchParams;
+  const session = await auth();
+  const isAdmin = session?.user?.isAdmin ?? false;
   const currentMonth = params.month || format(new Date(), 'yyyy-MM');
   const isSearching = !!params.search;
 
   const [events, searchResults, queueItems] = await Promise.all([
     getEvents(currentMonth),
     isSearching ? searchEvents(params.search!) : Promise.resolve([]),
-    getQueueItems(),
+    isAdmin ? getQueueItems() : Promise.resolve([]),
   ]);
 
   const displayEvents = isSearching ? searchResults : events;
@@ -36,6 +40,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </p>
       </div>
 
+      <AlertBanner />
+
       <Suspense fallback={null}>
         <SearchBar className="max-w-xl mx-auto mb-8" />
       </Suspense>
@@ -45,7 +51,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <p className="text-stone-500 mb-4">
             {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} for &quot;{params.search}&quot;
           </p>
-          <EventList events={searchResults} />
+          <EventList events={searchResults} isAdmin={isAdmin} />
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -71,7 +77,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </div>
 
           <div className="space-y-6">
-            <QuickQueueView items={queueItems} />
+            {isAdmin && <QuickQueueView items={queueItems} />}
 
             {/* Desktop only: Events sidebar */}
             <div className="hidden lg:block">
@@ -79,7 +85,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 <span>📆</span>
                 Events in {format(new Date(currentMonth + '-01'), 'MMMM yyyy')}
               </h2>
-              <EventList events={events} />
+              <EventList events={events} isAdmin={isAdmin} />
             </div>
           </div>
         </div>

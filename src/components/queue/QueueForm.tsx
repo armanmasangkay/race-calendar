@@ -50,6 +50,15 @@ export function QueueForm({ compact = false, onSuccess }: QueueFormProps) {
       />
 
       {!compact && (
+        <Input
+          label="📝 Event Title (optional)"
+          name="title"
+          type="text"
+          placeholder="Event title"
+        />
+      )}
+
+      {!compact && (
         <div>
           <label className="block text-sm font-semibold text-stone-700 mb-1.5">
             📝 Notes (optional)

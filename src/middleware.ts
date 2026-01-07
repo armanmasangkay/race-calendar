@@ -12,5 +12,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ['/events/new', '/events/:id/edit', '/queue'],
+  matcher: ['/events/new', '/events/:id/edit', '/queue', '/admin/allowed-emails'],
 };

@@ -12,6 +12,7 @@ export async function createQueueItem(formData: FormData) {
 
   const rawData = {
     url: formData.get('url') as string,
+    title: formData.get('title') as string || undefined,
     notes: formData.get('notes') as string || undefined,
   };
 
@@ -19,7 +20,9 @@ export async function createQueueItem(formData: FormData) {
 
   const [newItem] = await db.insert(eventQueue).values({
     url: validated.url,
+    title: validated.title || null,
     notes: validated.notes || null,
+    source: 'admin',
   }).returning();
 
   revalidatePath('/');

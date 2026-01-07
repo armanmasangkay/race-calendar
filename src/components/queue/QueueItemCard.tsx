@@ -38,6 +38,19 @@ export function QueueItemCard({ item, compact = false }: QueueItemCardProps) {
     <Card className="p-4">
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1 min-w-0">
+          {/* Source badge for visitor submissions */}
+          {item.source === 'visitor' && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full mb-2">
+              <span>👤</span>
+              Visitor Submission
+            </span>
+          )}
+
+          {/* Title (if provided) */}
+          {item.title && (
+            <h3 className="font-medium text-stone-800 mb-1">{item.title}</h3>
+          )}
+
           <a
             href={item.url}
             target="_blank"

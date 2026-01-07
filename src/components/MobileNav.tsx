@@ -90,6 +90,12 @@ export function MobileNav({ isAdmin, user }: MobileNavProps) {
                   📋 Queue
                 </Link>
                 <Link
+                  href="/admin/allowed-emails"
+                  className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200 py-2"
+                >
+                  📧 Allowed Emails
+                </Link>
+                <Link
                   href="/events/new"
                   className="bg-gradient-to-r from-rose-500 to-rose-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:from-rose-600 hover:to-rose-500 transition-all duration-300 shadow-sm hover:shadow-md text-center mt-1"
                 >
@@ -130,14 +136,7 @@ export function MobileNav({ isAdmin, user }: MobileNavProps) {
                     Sign Out
                   </button>
                 </div>
-              ) : (
-                <Link
-                  href="/admin/login"
-                  className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200 py-2 block"
-                >
-                  Sign In
-                </Link>
-              )}
+              ) : null}
             </div>
           </div>
         </div>

@@ -50,7 +50,10 @@ export type EventWithCategories = Event & {
 export const eventQueue = pgTable('event_queue', {
   id: serial('id').primaryKey(),
   url: text('url').notNull(),
+  title: varchar('title', { length: 255 }),
   notes: text('notes'),
+  source: varchar('source', { length: 20 }).notNull().default('admin'),
+  submitterIp: varchar('submitter_ip', { length: 45 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
@@ -93,3 +96,14 @@ export const sessions = pgTable('sessions', {
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+
+// Allowed emails for registration
+export const allowedEmails = pgTable('allowed_emails', {
+  id: serial('id').primaryKey(),
+  email: text('email').unique().notNull(),
+  addedBy: text('added_by').references(() => users.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export type AllowedEmail = typeof allowedEmails.$inferSelect;
+export type NewAllowedEmail = typeof allowedEmails.$inferInsert;

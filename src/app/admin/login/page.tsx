@@ -1,12 +1,21 @@
 import { auth, signIn } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
-export default async function AdminLoginPage() {
+interface AdminLoginPageProps {
+  searchParams: Promise<{ error?: string }>;
+}
+
+export default async function AdminLoginPage({ searchParams }: AdminLoginPageProps) {
   const session = await auth();
+  const params = await searchParams;
 
   if (session?.user?.isAdmin) {
     redirect('/queue');
   }
+
+  const errorMessage = params.error === 'EmailNotAllowed'
+    ? 'Your email address is not authorized to access this application. Please contact an administrator.'
+    : null;
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
@@ -14,6 +23,12 @@ export default async function AdminLoginPage() {
         <h1 className="text-2xl font-bold text-stone-800 mb-6 text-center">
           Admin Access
         </h1>
+
+        {errorMessage && (
+          <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl text-center">
+            <p className="text-rose-700 text-sm">{errorMessage}</p>
+          </div>
+        )}
 
         {session && !session.user.isAdmin && (
           <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">

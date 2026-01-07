@@ -8,20 +8,23 @@ interface EventListProps {
   events: EventWithCategories[];
   compact?: boolean;
   groupByMonth?: boolean;
+  isAdmin?: boolean;
 }
 
-export function EventList({ events, compact = false, groupByMonth = false }: EventListProps) {
+export function EventList({ events, compact = false, groupByMonth = false, isAdmin = false }: EventListProps) {
   if (events.length === 0) {
     return (
       <div className="text-center py-12 px-6 bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50 rounded-2xl border border-rose-100">
         <div className="text-6xl mb-4 animate-bounce-subtle">🏃</div>
         <p className="text-stone-600 text-lg font-medium">No races scheduled yet!</p>
         <p className="text-stone-400 mt-2">Time to find your next adventure! 🎉</p>
-        <Link href="/events/new" className="inline-block mt-6">
-          <Button>
-            ✨ Add Your First Race
-          </Button>
-        </Link>
+        {isAdmin && (
+          <Link href="/events/new" className="inline-block mt-6">
+            <Button>
+              ✨ Add Your First Race
+            </Button>
+          </Link>
+        )}
       </div>
     );
   }
@@ -53,7 +56,7 @@ export function EventList({ events, compact = false, groupByMonth = false }: Eve
                   className="animate-slide-up"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <EventCard event={event} compact={compact} />
+                  <EventCard event={event} compact={compact} isAdmin={isAdmin} />
                 </div>
               ))}
             </div>
@@ -71,7 +74,7 @@ export function EventList({ events, compact = false, groupByMonth = false }: Eve
           className="animate-slide-up"
           style={{ animationDelay: `${index * 0.1}s` }}
         >
-          <EventCard event={event} compact={compact} />
+          <EventCard event={event} compact={compact} isAdmin={isAdmin} />
         </div>
       ))}
     </div>

@@ -8,6 +8,7 @@ interface EventCardProps {
   event: EventWithCategories;
   showActions?: boolean;
   compact?: boolean;
+  isAdmin?: boolean;
 }
 
 const categoryColors = [
@@ -24,7 +25,7 @@ function isPromoActive(promoDeadline: string | null): boolean {
   return new Date(promoDeadline) >= today;
 }
 
-export function EventCard({ event, showActions = true, compact = false }: EventCardProps) {
+export function EventCard({ event, showActions = true, compact = false, isAdmin = false }: EventCardProps) {
   const isDeadlinePassed =
     event.paymentDeadline && new Date(event.paymentDeadline) < new Date();
 
@@ -84,7 +85,7 @@ export function EventCard({ event, showActions = true, compact = false }: EventC
             <span className="text-sm text-stone-600">{event.location}</span>
           </div>
         </div>
-        {showActions && (
+        {showActions && isAdmin && (
           <Link href={`/events/${event.id}/edit`}>
             <Button variant="ghost" size="sm" className="text-stone-400 hover:text-rose-500">
               ✏️ Edit

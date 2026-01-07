@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Button } from '@/components/ui';
+import { AlertBanner, Button } from '@/components/ui';
 import { EventList, MonthFilter, SearchBar } from '@/components/events';
 import { getEvents, getEventsByYear, searchEvents } from '@/lib/actions/events';
+import { auth } from '@/lib/auth';
 import { format } from 'date-fns';
 
 interface EventsPageProps {
@@ -11,6 +12,8 @@ interface EventsPageProps {
 
 export default async function EventsPage({ searchParams }: EventsPageProps) {
   const params = await searchParams;
+  const session = await auth();
+  const isAdmin = session?.user?.isAdmin ?? false;
   const currentYear = params.year || format(new Date(), 'yyyy');
   const isYearView = !params.month;
   const isSearching = !!params.search;
@@ -28,10 +31,14 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
           <span className="text-4xl">🎯</span>
           All Race Events
         </h1>
-        <Link href="/events/new">
-          <Button>✨ Add Event</Button>
-        </Link>
+{isAdmin && (
+          <Link href="/events/new">
+            <Button>✨ Add Event</Button>
+          </Link>
+        )}
       </div>
+
+      <AlertBanner />
 
       <Suspense fallback={null}>
         <SearchBar className="mb-4" />
@@ -47,7 +54,7 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
         </p>
       )}
 
-      <EventList events={events} groupByMonth={isYearView && !isSearching} />
+      <EventList events={events} groupByMonth={isYearView && !isSearching} isAdmin={isAdmin} />
     </div>
   );
 }

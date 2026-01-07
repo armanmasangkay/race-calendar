@@ -38,14 +38,7 @@ export function UserMenu({ user }: UserMenuProps) {
   }, [isOpen]);
 
   if (!user) {
-    return (
-      <Link
-        href="/admin/login"
-        className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200"
-      >
-        Sign In
-      </Link>
-    );
+    return null;
   }
 
   const initials = user.name
