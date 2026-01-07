@@ -4,8 +4,12 @@ import { useState, useEffect, useRef } from 'react';
 import { Button, Input } from '@/components/ui';
 import { getCaptchaChallenge, submitVisitorEvent } from '@/lib/actions/visitor-submission';
 
-export function SubmitEventWidget() {
-  const [isExpanded, setIsExpanded] = useState(false);
+interface SubmitEventWidgetProps {
+  defaultExpanded?: boolean;
+}
+
+export function SubmitEventWidget({ defaultExpanded = false }: SubmitEventWidgetProps) {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);

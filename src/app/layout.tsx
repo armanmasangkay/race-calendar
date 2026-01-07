@@ -56,6 +56,14 @@ export default async function RootLayout({
                 >
                   🎯 All Events
                 </Link>
+                {!isAdmin && (
+                  <Link
+                    href="/suggest"
+                    className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200"
+                  >
+                    💡 Suggest Event
+                  </Link>
+                )}
                 {isAdmin && (
                   <>
                     <Link

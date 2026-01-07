@@ -81,6 +81,14 @@ export function MobileNav({ isAdmin, user }: MobileNavProps) {
             >
               🎯 All Events
             </Link>
+            {!isAdmin && (
+              <Link
+                href="/suggest"
+                className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200 py-2"
+              >
+                💡 Suggest Event
+              </Link>
+            )}
             {isAdmin && (
               <>
                 <Link
