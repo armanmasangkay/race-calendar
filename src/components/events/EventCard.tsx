@@ -97,34 +97,38 @@ export function EventCard({ event, showActions = true, compact = false, isAdmin 
       {!compact && (
         <>
           {/* Categories */}
-          <div className={cn('mt-4 flex flex-wrap gap-2', isCancelled && 'opacity-50')}>
+          <div className={cn('mt-4 space-y-2', isCancelled && 'opacity-50')}>
             {event.categories.map((cat, index) => {
               const hasActivePromo = cat.promoPrice && isPromoActive(cat.promoDeadline);
 
               return (
-                <span
-                  key={cat.id}
-                  className={cn(
-                    'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold',
-                    categoryColors[index % categoryColors.length]
-                  )}
-                >
-                  🏅 {cat.categoryName}:{' '}
-                  {hasActivePromo ? (
-                    <span className="flex flex-col text-xs leading-tight">
-                      <span>
-                        <span className="opacity-70">Regular:</span>{' '}
-                        <span className="opacity-80">P{parseFloat(cat.price).toLocaleString()}</span>
+                <div key={cat.id} className="flex items-center gap-3">
+                  <span
+                    className={cn(
+                      'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold min-w-[60px] justify-center',
+                      categoryColors[index % categoryColors.length]
+                    )}
+                  >
+                    🏅 {cat.categoryName}
+                  </span>
+                  <div className="flex items-center gap-2 text-sm text-stone-600">
+                    {hasActivePromo ? (
+                      <>
+                        <span>
+                          Regular: <span className="font-medium">P{parseFloat(cat.price).toLocaleString()}</span>
+                        </span>
+                        <span className="text-stone-400">|</span>
+                        <span className="text-rose-600 font-semibold">
+                          {cat.promoName || 'Promo'}: P{parseFloat(cat.promoPrice!).toLocaleString()}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="font-medium">
+                        P{parseFloat(cat.price).toLocaleString()}
                       </span>
-                      <span>
-                        <span className="opacity-90">{cat.promoName || 'Promo'}:</span>{' '}
-                        <span className="font-bold">P{parseFloat(cat.promoPrice!).toLocaleString()}</span>
-                      </span>
-                    </span>
-                  ) : (
-                    <>P{parseFloat(cat.price).toLocaleString()}</>
-                  )}
-                </span>
+                    )}
+                  </div>
+                </div>
               );
             })}
           </div>
