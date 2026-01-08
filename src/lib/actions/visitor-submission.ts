@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { visitorSubmissionSchema } from '@/lib/validations/queue';
 import { verifyCaptcha, generateCaptcha } from '@/lib/captcha';
 import { headers } from 'next/headers';
+import { sendNewSubmissionNotification } from '@/lib/email';
 
 // Rate limiting: simple in-memory store (for production scale, use Redis)
 const submissionCounts = new Map<string, { count: number; resetAt: number }>();
@@ -79,6 +80,13 @@ export async function submitVisitorEvent(formData: FormData) {
       submitterIp: ip,
       notes: null,
     });
+
+    // Send notification (non-blocking - don't fail submission if email fails)
+    sendNewSubmissionNotification({
+      title: parseResult.data.title,
+      url: parseResult.data.url,
+      submitterIp: ip,
+    }).catch((err) => console.error('Failed to send email notification:', err));
 
     revalidatePath('/queue');
 
