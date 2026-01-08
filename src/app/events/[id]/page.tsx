@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { Button, Card } from '@/components/ui';
-import { DeleteButton, CancelButton } from '@/components/events';
+import { DeleteButton, CancelButton, ShareButton } from '@/components/events';
 import { getEventById } from '@/lib/actions/events';
 import { cn } from '@/lib/utils/cn';
 import { auth } from '@/lib/auth';
@@ -57,13 +57,16 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
           </div>
         )}
 
-        <h1 className={cn(
-          'text-3xl font-bold text-stone-800 mb-6 flex items-center gap-3',
-          isCancelled && 'line-through text-stone-500'
-        )}>
-          <span className="text-4xl">🏃</span>
-          {event.name}
-        </h1>
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <h1 className={cn(
+            'text-3xl font-bold text-stone-800 flex items-center gap-3',
+            isCancelled && 'line-through text-stone-500'
+          )}>
+            <span className="text-4xl">🏃</span>
+            {event.name}
+          </h1>
+          <ShareButton eventId={event.id} />
+        </div>
 
         <div className="space-y-4">
           <div className={cn('flex items-center gap-3', isCancelled && 'opacity-60')}>
