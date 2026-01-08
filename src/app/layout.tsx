@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { MobileNav } from "@/components/MobileNav";
 import { UserMenu } from "@/components/UserMenu";
-import { SubmitEventWidget } from "@/components/footer";
+import { SubmitEventWidget, FeedbackWidget } from "@/components/footer";
 import { auth } from "@/lib/auth";
 import "./globals.css";
 
@@ -79,6 +79,12 @@ export default async function RootLayout({
                       📧 Emails
                     </Link>
                     <Link
+                      href="/admin/feedback"
+                      className="text-stone-600 hover:text-rose-500 text-sm font-medium transition-colors duration-200"
+                    >
+                      💬 Feedback
+                    </Link>
+                    <Link
                       href="/events/new"
                       className="bg-gradient-to-r from-rose-500 to-rose-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:from-rose-600 hover:to-rose-500 transition-all duration-300 transform hover:scale-105 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
                     >
@@ -99,7 +105,7 @@ export default async function RootLayout({
         </main>
         <footer className="border-t border-rose-100 mt-auto bg-gradient-to-r from-orange-50 via-rose-50 to-teal-50">
           <div className="max-w-6xl mx-auto px-4 py-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
               {/* Left side - text */}
               <div className="text-center md:text-left">
                 <p className="text-stone-600 text-sm">
@@ -110,10 +116,17 @@ export default async function RootLayout({
                 </p>
               </div>
 
-              {/* Right side - submit widget */}
-              <div className="flex justify-center md:justify-end">
+              {/* Middle - submit event widget */}
+              <div className="flex justify-center">
                 <div className="w-full max-w-xs">
                   <SubmitEventWidget />
+                </div>
+              </div>
+
+              {/* Right side - feedback widget */}
+              <div className="flex justify-center md:justify-end">
+                <div className="w-full max-w-xs">
+                  <FeedbackWidget />
                 </div>
               </div>
             </div>

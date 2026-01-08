@@ -50,6 +50,13 @@
       "when": 1767793100127,
       "tag": "0006_add-promo-name",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1767857848391,
+      "tag": "0007_icy_virginia_dare",
+      "breakpoints": true
     }
   ]
 }

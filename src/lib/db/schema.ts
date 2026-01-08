@@ -61,6 +61,22 @@ export const eventQueue = pgTable('event_queue', {
 export type QueueItem = typeof eventQueue.$inferSelect;
 export type NewQueueItem = typeof eventQueue.$inferInsert;
 
+// Feedback Queue - for feature requests and bug reports
+export const feedbackQueue = pgTable('feedback_queue', {
+  id: serial('id').primaryKey(),
+  type: varchar('type', { length: 20 }).notNull(), // 'feature' or 'bug'
+  description: text('description').notNull(),
+  email: varchar('email', { length: 255 }),
+  status: varchar('status', { length: 20 }).notNull().default('pending'), // 'pending', 'reviewed', 'resolved', 'dismissed'
+  submitterIp: varchar('submitter_ip', { length: 45 }),
+  adminNotes: text('admin_notes'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export type FeedbackItem = typeof feedbackQueue.$inferSelect;
+export type NewFeedbackItem = typeof feedbackQueue.$inferInsert;
+
 // NextAuth.js tables
 export const users = pgTable('users', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
