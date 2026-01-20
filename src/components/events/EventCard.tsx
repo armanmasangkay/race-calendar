@@ -3,6 +3,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { Card, Button } from '@/components/ui';
 import { EventWithCategories } from '@/lib/db/schema';
 import { cn } from '@/lib/utils/cn';
+import { ShareButton } from './ShareButton';
 
 interface EventCardProps {
   event: EventWithCategories;
@@ -85,13 +86,16 @@ export function EventCard({ event, showActions = true, compact = false, isAdmin 
             <span className="text-sm text-stone-600">{event.location}</span>
           </div>
         </div>
-        {showActions && isAdmin && (
-          <Link href={`/events/${event.id}/edit`}>
-            <Button variant="ghost" size="sm" className="text-stone-400 hover:text-rose-500">
-              ✏️ Edit
-            </Button>
-          </Link>
-        )}
+        <div className="flex flex-col gap-2">
+          <ShareButton eventId={event.id} />
+          {showActions && isAdmin && (
+            <Link href={`/events/${event.id}/edit`}>
+              <Button variant="ghost" size="sm" className="text-stone-400 hover:text-rose-500">
+                ✏️ Edit
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
 
       {!compact && (
